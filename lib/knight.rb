@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'coordinate'
-
 # a knight piece
 class Knight
   def initialize() end
