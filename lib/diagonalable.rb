@@ -14,7 +14,6 @@ module Diagonalable
     bottom = []
     Constants::BOARD_DIMENSION.times do |i|
       coord = start_coordinate.transform(i - min, i - min)
-      p "#{coord.x}, #{coord.y}"
       next unless coord.valid?
 
       if coord.past_x?(start_coordinate)
@@ -29,10 +28,8 @@ module Diagonalable
   def right_diagonal_valid_moves(start_coordinate)
     top = []
     bottom = []
-    puts "past y"
     Constants::BOARD_DIMENSION.times do |i|
       coord = start_coordinate.transform(i - start_coordinate.x, start_coordinate.x - i)
-      p "#{coord.x}, #{coord.y}"
       next unless coord.valid?
 
       if coord.past_y?(start_coordinate)
