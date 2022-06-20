@@ -56,7 +56,9 @@ describe Bishop do
     context 'when the start coordinate is D4' do
       before do
         allow(d4).to receive(:min_coordinate).and_return(3)
-        allow(d4).to receive(:transform).and_return(a1, b2, c3, d4, e5, f6, g7, h8, a7, b6, c5, d4, e3, f2, g1, invalid1)
+        allow(d4).to receive(:transform).and_return(
+          a1, b2, c3, d4, e5, f6, g7, h8, a7, b6, c5, d4, e3, f2, g1, invalid1
+        )
         allow(a1).to receive(:valid?).and_return(true)
         allow(a1).to receive(:past_x?).and_return(false)
         allow(b2).to receive(:valid?).and_return(true)
