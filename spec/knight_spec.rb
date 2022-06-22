@@ -4,34 +4,35 @@ require_relative '../lib/knight'
 require_relative '../lib/coordinate'
 
 describe Knight do
+  subject(:knight) { described_class.new(:black) }
+
+  let(:a8) { instance_double(Coordinate, x: 0, y: 7) }
+
+  let(:b1) { instance_double(Coordinate, x: 1, y: 0) }
+  let(:b3) { instance_double(Coordinate, x: 1, y: 2) }
+  let(:b5) { instance_double(Coordinate, x: 1, y: 4) }
+  let(:b6) { instance_double(Coordinate, x: 1, y: 5) }
+
+  let(:c2) { instance_double(Coordinate, x: 2, y: 1) }
+  let(:c6) { instance_double(Coordinate, x: 2, y: 5) }
+  let(:c7) { instance_double(Coordinate, x: 2, y: 6) }
+
+  let(:d4) { instance_double(Coordinate, x: 3, y: 3) }
+
+  let(:e2) { instance_double(Coordinate, x: 4, y: 1) }
+  let(:e6) { instance_double(Coordinate, x: 4, y: 5) }
+
+  let(:f3) { instance_double(Coordinate, x: 5, y: 2) }
+  let(:f5) { instance_double(Coordinate, x: 5, y: 4) }
+
+  let(:invalid1) { instance_double(Coordinate, x: -2, y: 6) }
+  let(:invalid2) { instance_double(Coordinate, x: -2, y: 8) }
+  let(:invalid3) { instance_double(Coordinate, x: -1, y: 5) }
+  let(:invalid4) { instance_double(Coordinate, x: -1, y: 9) }
+  let(:invalid5) { instance_double(Coordinate, x: 1, y: 9) }
+  let(:invalid6) { instance_double(Coordinate, x: 2, y: 8) }
+
   describe '#valid_moves' do
-    subject(:knight) { described_class.new }
-
-    let(:a8) { instance_double(Coordinate, x: 0, y: 7) }
-
-    let(:b3) { instance_double(Coordinate, x: 1, y: 2) }
-    let(:b5) { instance_double(Coordinate, x: 1, y: 4) }
-    let(:b6) { instance_double(Coordinate, x: 1, y: 5) }
-  
-    let(:c2) { instance_double(Coordinate, x: 2, y: 1) }
-    let(:c6) { instance_double(Coordinate, x: 2, y: 5) }
-    let(:c7) { instance_double(Coordinate, x: 2, y: 6) }
-
-    let(:d4) { instance_double(Coordinate, x: 3, y: 3) }
-  
-    let(:e2) { instance_double(Coordinate, x: 4, y: 1) }
-    let(:e6) { instance_double(Coordinate, x: 4, y: 5) }
-  
-    let(:f3) { instance_double(Coordinate, x: 5, y: 2) }
-    let(:f5) { instance_double(Coordinate, x: 5, y: 4) }
-
-    let(:invalid1) { instance_double(Coordinate, x: -2, y: 6) }
-    let(:invalid2) { instance_double(Coordinate, x: -2, y: 8) }
-    let(:invalid3) { instance_double(Coordinate, x: -1, y: 5) }
-    let(:invalid4) { instance_double(Coordinate, x: -1, y: 9) }
-    let(:invalid5) { instance_double(Coordinate, x: 1, y: 9) }
-    let(:invalid6) { instance_double(Coordinate, x: 2, y: 8) }
-
     context 'when the starting coordinate is D4' do
       before do
         allow(d4).to receive(:transform).and_return(b3, b5, c2, c6, e2, e6, f3, f5)
@@ -65,6 +66,28 @@ describe Knight do
 
       it 'returns an array with all the moves a knight can make from A8' do
         expect(knight.valid_moves(a8)).to contain_exactly([b6], [c7])
+      end
+    end
+  end
+
+  describe '#handles?' do
+    context 'when the given coordinate is one of the coordinates that starts with a knight' do
+      before do
+        allow(b1).to receive(:in?).and_return(true)
+      end
+
+      it 'handles' do
+        expect(described_class.handles?(b1)).to eq(true)
+      end
+    end
+
+    context 'when the given coordinate is not one of the coordinates that starts with a knight' do
+      before do
+        allow(a8).to receive(:in?).and_return(false)
+      end
+
+      it 'does not handle' do
+        expect(described_class.handles?(a8)).to eq(false)
       end
     end
   end

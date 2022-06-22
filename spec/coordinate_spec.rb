@@ -3,6 +3,9 @@
 require_relative '../lib/coordinate'
 
 describe Coordinate do
+  subject(:d4) { described_class.new(3, 3) }
+  subject(:c1) { described_class.new(2, 0) }
+  subject(:b7) { described_class.new(1, 6) }
   describe '#transform' do
     subject(:transform_coordinate) { described_class.new(5, 5) }
 
@@ -141,6 +144,60 @@ describe Coordinate do
     context "when the given coordinate's y is the same as the coordinate's y" do
       it 'is not past y' do
         expect(smaller_y).not_to be_past_y(same_as_smaller_y)
+      end
+    end
+  end
+
+  describe '#y_between?' do
+    context "when the coordinate's y is between the given min and max" do
+      it 'is between' do
+        expect(d4).to be_y_between(2, 3)
+      end
+    end
+
+    context "when the coordinate's y is not between the given min and max" do
+      it 'is not between' do
+        expect(d4).not_to be_y_between(6, 7)
+      end
+    end
+  end
+
+  describe '#in?' do
+    context "when the coordinate's x and y are both in the respective arrays provided" do
+      it 'is in' do
+        expect(d4).to be_in([1, 3, 5], [0, 3, 6])
+      end
+    end
+
+    context "when the coordinate's x is not in the respective array" do
+      it 'is not in' do
+        expect(d4).not_to be_in([1, 2, 5], [0, 3, 6])
+      end
+    end
+
+    context "when the coordinate's y is not in the respective array" do
+      it 'is not in' do
+        expect(d4).not_to be_in([1, 3, 5], [0, 6])
+      end
+    end
+  end
+
+  describe '#x_and_y_both_even_or_odd?' do
+    context 'when x and y are both odd' do
+      it 'is both odd' do
+        expect(d4).to be_x_and_y_both_even_or_odd
+      end
+    end
+
+    context 'when x and y are both even' do
+      it 'is both even' do
+        expect(c1).to be_x_and_y_both_even_or_odd
+      end
+    end
+
+    context 'when one coordinate is even and the other is odd' do
+      it 'is not both odd or even' do
+        expect(b7).not_to be_x_and_y_both_even_or_odd
       end
     end
   end

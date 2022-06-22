@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 require_relative 'diagonalable'
+require_relative 'piece'
 
 # a bishop piece
-class Bishop
+class Bishop < Piece
   include Diagonalable
-  def initialize() end
-
   def valid_moves(start_coordinate)
     diagonal_valid_moves(start_coordinate)
+  end
+
+  def self.handles?(coordinate)
+    coordinate.in?(Constants::BISHOP_X_COORDINATES, Constants::NOT_PAWN_Y_COORDINATES)
+  end
+
+  def to_s
+    color_text(' ♝ ', @color)
   end
 end

@@ -4,7 +4,7 @@ require_relative '../lib/bishop'
 require_relative '../lib/coordinate'
 
 describe Bishop do
-  subject(:bishop) { described_class.new }
+  subject(:bishop) { described_class.new(:black) }
 
   let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a7) { instance_double(Coordinate, x: 0, y: 6) }
@@ -15,9 +15,11 @@ describe Bishop do
   let(:b7) { instance_double(Coordinate, x: 1, y: 6) }
   let(:b8) { instance_double(Coordinate, x: 1, y: 7) }
 
+  let(:c2) { instance_double(Coordinate, x: 2, y: 1) }
   let(:c3) { instance_double(Coordinate, x: 2, y: 2) }
   let(:c5) { instance_double(Coordinate, x: 2, y: 4) }
   let(:c6) { instance_double(Coordinate, x: 2, y: 5) }
+  let(:c8) { instance_double(Coordinate, x: 2, y: 7) }
 
   let(:d4) { instance_double(Coordinate, x: 3, y: 3) }
   let(:d5) { instance_double(Coordinate, x: 3, y: 5) }
@@ -169,6 +171,28 @@ describe Bishop do
 
       it 'returns an array with all the moves a diagonal piece can make from G2' do
         expect(bishop.valid_moves(g2)).to contain_exactly([f1], [h3], [h1], [f3, e4, d5, c6, b7, a8])
+      end
+    end
+  end
+
+  describe '#handles?' do
+    context 'when the given coordinate is one of the coordinates that starts with a bishop' do
+      before do
+        allow(c2).to receive(:in?).and_return(true)
+      end
+
+      it 'handles' do
+        expect(described_class.handles?(c2)).to eq(true)
+      end
+    end
+
+    context 'when the given coordinate is not one of the coordinates that starts with a bishop' do
+      before do
+        allow(f2).to receive(:in?).and_return(false)
+      end
+
+      it 'does not handle' do
+        expect(described_class.handles?(f2)).to eq(false)
       end
     end
   end

@@ -34,4 +34,16 @@ class Coordinate
   def past_y?(other)
     @y > other.y
   end
+
+  def y_between?(min, max)
+    @y.between?(min, max)
+  end
+
+  def in?(x_coordinates, y_coordinates)
+    x_coordinates.include?(@x) && y_coordinates.include?(@y)
+  end
+
+  def x_and_y_both_even_or_odd?
+    @x.even? == @y.even?
+  end
 end

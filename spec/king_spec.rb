@@ -4,7 +4,7 @@ require_relative '../lib/king'
 require_relative '../lib/coordinate'
 
 describe King do
-  subject(:king) { described_class.new }
+  subject(:king) { described_class.new(:black) }
 
   let(:a7) { instance_double(Coordinate, x: 0, y: 6) }
   let(:a8) { instance_double(Coordinate, x: 0, y: 7) }
@@ -20,6 +20,7 @@ describe King do
   let(:d4) { instance_double(Coordinate, x: 3, y: 3) }
   let(:d5) { instance_double(Coordinate, x: 3, y: 4) }
 
+  let(:e1) { instance_double(Coordinate, x: 4, y: 0) }
   let(:e3) { instance_double(Coordinate, x: 4, y: 2) }
   let(:e4) { instance_double(Coordinate, x: 4, y: 3) }
   let(:e5) { instance_double(Coordinate, x: 4, y: 4) }
@@ -64,6 +65,28 @@ describe King do
 
       it 'returns a nested array of valid moves from A8' do
         expect(king.valid_moves(a8)).to contain_exactly([a7], [b7], [b8])
+      end
+    end
+  end
+
+  describe '#handles?' do
+    context 'when the given coordinate is one of the coordinates that starts with a king' do
+      before do
+        allow(e1).to receive(:in?).and_return(true)
+      end
+
+      it 'handles' do
+        expect(described_class.handles?(e1)).to eq(true)
+      end
+    end
+
+    context 'when the given coordinate is not one of the coordinates that starts with a king' do
+      before do
+        allow(a7).to receive(:in?).and_return(false)
+      end
+
+      it 'does not handle' do
+        expect(described_class.handles?(a7)).to eq(false)
       end
     end
   end

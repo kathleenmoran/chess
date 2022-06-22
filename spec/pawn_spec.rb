@@ -4,9 +4,12 @@ require_relative '../lib/pawn'
 require_relative '../lib/coordinate'
 
 describe Pawn do
+  let(:a2) { instance_double(Coordinate, x: 0, y: 1) }
+  let(:a3) { instance_double(Coordinate, x: 0, y: 2) }
+
   describe '#valid_moves' do
     context "when the pawn hasn't been moved yet" do
-      subject(:unmoved_pawn) { described_class.new }
+      subject(:unmoved_pawn) { described_class.new(:black) }
       let(:start_coordinate) { instance_double(Coordinate, x: 0, y: 1) }
       let(:valid_move1) { instance_double(Coordinate, x: 0, y: 2) }
       let(:valid_move2) { instance_double(Coordinate, x: 0, y: 3) }
@@ -23,7 +26,7 @@ describe Pawn do
     end
 
     context 'when the pawn has already moved' do
-      subject(:moved_pawn) { described_class.new(first_move: false) }
+      subject(:moved_pawn) { described_class.new(:black, first_move: false) }
       let(:start_coordinate) { instance_double(Coordinate, x: 0, y: 2) }
       let(:valid_move) { instance_double(Coordinate, x: 0, y: 3) }
 
@@ -39,7 +42,7 @@ describe Pawn do
   end
 
   describe '#valid_captures' do
-    subject(:pawn) { described_class.new }
+    subject(:pawn) { described_class.new(:black) }
     context 'when both diagonals are in bounds' do
       subject(:pawn_both_captures_in_bounds) { described_class.new }
       let(:start_coordinate) { instance_double(Coordinate, x: 4, y: 1) }
@@ -58,7 +61,7 @@ describe Pawn do
     end
 
     context 'when a diagonal is out of bounds' do
-      subject(:pawn_one_capture_in_bounds) { described_class.new }
+      subject(:pawn_one_capture_in_bounds) { described_class.new(:black) }
       let(:start_coordinate) { instance_double(Coordinate, x: 0, y: 1) }
       let(:invalid_capture) { instance_double(Coordinate, x: -1, y: 2) }
       let(:valid_capture) { instance_double(Coordinate, x: 1, y: 2) }
@@ -76,7 +79,7 @@ describe Pawn do
   end
 
   describe '#valid_en_passant_capture' do
-    subject(:pawn) { described_class.new }
+    subject(:pawn) { described_class.new(:black) }
     context 'when both potential en passants are in bounds' do
       let(:end_coordinate) { instance_double(Coordinate, x: 3, y: 5) }
       let(:valid_capture) { instance_double(Coordinate, x: 3, y: 4) }
@@ -88,6 +91,28 @@ describe Pawn do
 
       it 'returns the left and right adjacent coordinates' do
         expect(pawn.valid_en_passant_capture(end_coordinate)).to eq(valid_capture)
+      end
+    end
+  end
+
+  describe '#handles?' do
+    context 'when the given coordinate is one of the coordinates that starts with a pawn' do
+      before do
+        allow(a2).to receive(:in?).and_return(true)
+      end
+
+      it 'handles' do
+        expect(described_class.handles?(a2)).to eq(true)
+      end
+    end
+
+    context 'when the given coordinate is not one of the coordinates that starts with a pawn' do
+      before do
+        allow(a3).to receive(:in?).and_return(false)
+      end
+
+      it 'does not handle' do
+        expect(described_class.handles?(a3)).to eq(false)
       end
     end
   end
