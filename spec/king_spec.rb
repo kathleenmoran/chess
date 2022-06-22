@@ -90,4 +90,16 @@ describe King do
       end
     end
   end
+
+  describe '#valid_captures' do
+    it 'returns nil' do
+      expect(king.valid_captures(a7)).to be_nil
+    end
+  end
+
+  describe '#valid_en_passant_capture' do
+    it 'returns nil' do
+      expect(king.valid_en_passant_capture(a7)).to be_nil
+    end
+  end
 end

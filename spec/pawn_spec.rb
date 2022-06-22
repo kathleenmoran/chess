@@ -6,6 +6,7 @@ require_relative '../lib/coordinate'
 describe Pawn do
   let(:a2) { instance_double(Coordinate, x: 0, y: 1) }
   let(:a3) { instance_double(Coordinate, x: 0, y: 2) }
+        subject(:unmoved_pawn) { described_class.new(:black) }
 
   describe '#valid_moves' do
     context "when the pawn hasn't been moved yet" do

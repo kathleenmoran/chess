@@ -196,4 +196,16 @@ describe Bishop do
       end
     end
   end
+
+  describe '#valid_captures' do
+    it 'returns nil' do
+      expect(bishop.valid_captures(f2)).to be_nil
+    end
+  end
+
+  describe '#valid_en_passant_capture' do
+    it 'returns nil' do
+      expect(bishop.valid_en_passant_capture(f2)).to be_nil
+    end
+  end
 end

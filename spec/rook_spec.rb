@@ -6,7 +6,7 @@ require_relative '../lib/coordinate'
 describe Rook do
   subject(:rook) { described_class.new(:black) }
 
-  let(:a0) { instance_double(Coordinate, x: 0, y: 0) }
+  let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a4) { instance_double(Coordinate, x: 0, y: 3) }
   let(:a7) { instance_double(Coordinate, x: 0, y: 6) }
 
@@ -72,11 +72,11 @@ describe Rook do
   describe '#handles?' do
     context 'when the given coordinate is one of the coordinates that starts with a rook' do
       before do
-        allow(a0).to receive(:in?).and_return(true)
+        allow(a1).to receive(:in?).and_return(true)
       end
 
       it 'handles' do
-        expect(described_class.handles?(a0)).to eq(true)
+        expect(described_class.handles?(a1)).to eq(true)
       end
     end
 
@@ -88,6 +88,18 @@ describe Rook do
       it 'does not handle' do
         expect(described_class.handles?(a4)).to eq(false)
       end
+    end
+  end
+
+  describe '#valid_captures' do
+    it 'returns nil' do
+      expect(rook.valid_captures(a1)).to be_nil
+    end
+  end
+
+  describe '#valid_en_passant_capture' do
+    it 'returns nil' do
+      expect(rook.valid_en_passant_capture(a1)).to be_nil
     end
   end
 end

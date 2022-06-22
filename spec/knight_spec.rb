@@ -91,4 +91,16 @@ describe Knight do
       end
     end
   end
+
+  describe '#valid_captures' do
+    it 'returns nil' do
+      expect(knight.valid_captures(a8)).to be_nil
+    end
+  end
+
+  describe '#valid_en_passant_capture' do
+    it 'returns nil' do
+      expect(knight.valid_en_passant_capture(a8)).to be_nil
+    end
+  end
 end
