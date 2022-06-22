@@ -22,4 +22,8 @@ class Square
   def to_s
     color_background(@piece, @color)
   end
+
+  def occupied?
+    !@piece.is_a?(NoPiece)
+  end
 end
