@@ -102,4 +102,10 @@ describe King do
       expect(king.valid_en_passant_capture(a7)).to be_nil
     end
   end
+
+  describe '#occupant?' do
+    it 'is an occupant' do
+      expect(king).to be_occupant
+    end
+  end
 end

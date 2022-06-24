@@ -6,14 +6,12 @@ require_relative 'constants'
 # a chess piece
 class Piece
   include Colorable
-  def initialize(color)
+  def initialize(color = nil)
     @color = color
   end
 
   def self.for(coordinate)
-    class_name = registry.find { |candidate| candidate.handles?(coordinate) }
-
-    class_name ? class_name.new(piece_color(coordinate)) : nil
+    registry.find { |candidate| candidate.handles?(coordinate) }.new(piece_color(coordinate))
   end
 
   def self.piece_color(coordinate)
@@ -36,15 +34,35 @@ class Piece
     register(candidate)
   end
 
-  def self.handles?(coordinate)
+  def self.handles?(_coordinate)
     false
   end
-  
-  def valid_moves(start_coordinate) end
 
-  def valid_captures(start_coordinate) end
+  def occupant?
+    true
+  end
+
+  def white?
+    @color == :white
+  end
+
+  def black?
+    @color == :black
+  end
+
+  def can_capture_forward?
+    true
+  end
+
+  def valid_moves(_start_coordinate)
+    []
+  end
+
+  def valid_captures(_start_coordinate)
+    []
+  end
 
   def valid_en_passant_capture(start_coordinate) end
 
-  def to_s() end
+  def move() end
 end

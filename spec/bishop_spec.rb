@@ -208,4 +208,10 @@ describe Bishop do
       expect(bishop.valid_en_passant_capture(f2)).to be_nil
     end
   end
+
+  describe '#occupant?' do
+    it 'is an occupant' do
+      expect(bishop).to be_occupant
+    end
+  end
 end

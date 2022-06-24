@@ -6,7 +6,7 @@ require_relative '../lib/coordinate'
 describe Pawn do
   let(:a2) { instance_double(Coordinate, x: 0, y: 1) }
   let(:a3) { instance_double(Coordinate, x: 0, y: 2) }
-        subject(:unmoved_pawn) { described_class.new(:black) }
+  subject(:unmoved_pawn) { described_class.new(:black) }
 
   describe '#valid_moves' do
     context "when the pawn hasn't been moved yet" do
@@ -115,6 +115,12 @@ describe Pawn do
       it 'does not handle' do
         expect(described_class.handles?(a3)).to eq(false)
       end
+    end
+  end
+
+  describe '#occupant?' do
+    it 'is an occupant' do
+      expect(unmoved_pawn).to be_occupant
     end
   end
 end

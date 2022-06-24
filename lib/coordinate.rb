@@ -19,6 +19,10 @@ class Coordinate
     self.class == other.class && @x == other.x && @y == other.y
   end
 
+  def eql?(other)
+    @x == other.x && @y == other.y
+  end
+
   def valid?
     @x.between?(0, Constants::BOARD_DIMENSION - 1) && @y.between?(0, Constants::BOARD_DIMENSION - 1)
   end

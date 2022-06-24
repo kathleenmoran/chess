@@ -103,4 +103,10 @@ describe Knight do
       expect(knight.valid_en_passant_capture(a8)).to be_nil
     end
   end
+
+  describe '#occupant?' do
+    it 'is an occupant' do
+      expect(knight).to be_occupant
+    end
+  end
 end

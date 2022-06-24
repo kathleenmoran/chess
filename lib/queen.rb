@@ -3,6 +3,7 @@
 require_relative 'diagonalable'
 require_relative 'plusable'
 require_relative 'piece'
+require_relative 'colorable'
 
 # a queen piece
 class Queen < Piece

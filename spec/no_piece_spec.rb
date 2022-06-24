@@ -48,4 +48,10 @@ describe NoPiece do
       expect(no_piece.valid_en_passant_capture(d3)).to be_nil
     end
   end
+
+  describe '#occupant?' do
+    it 'is an occupant' do
+      expect(no_piece).not_to be_occupant
+    end
+  end
 end

@@ -11,4 +11,8 @@ class NoPiece < Piece
   def to_s
     '   '
   end
+
+  def occupant?
+    false
+  end
 end

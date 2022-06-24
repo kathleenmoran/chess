@@ -102,4 +102,10 @@ describe Rook do
       expect(rook.valid_en_passant_capture(a1)).to be_nil
     end
   end
+
+  describe '#occupant?' do
+    it 'is an occupant' do
+      expect(rook).to be_occupant
+    end
+  end
 end

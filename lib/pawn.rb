@@ -14,21 +14,33 @@ class Pawn < Piece
   end
 
   def valid_moves(start_coordinate)
-    moves = [start_coordinate.transform(0, 1)]
-    moves << start_coordinate.transform(0, 2) if @first_move
+    moves = [start_coordinate.transform(0, 1 * y_move_sign)]
+    moves << start_coordinate.transform(0, 2 * y_move_sign) if @first_move
     [moves.select(&:valid?)]
   end
 
   def valid_captures(start_coordinate)
-    [start_coordinate.transform(-1, 1), start_coordinate.transform(1, 1)].select(&:valid?)
+    [start_coordinate.transform(-1, 1 * y_move_sign), start_coordinate.transform(1, 1 * y_move_sign)].select(&:valid?)
   end
 
   def valid_en_passant_capture(end_coordinate)
-    capture_coord = end_coordinate.transform(0, -1)
+    capture_coord = end_coordinate.transform(0, -1 * y_move_sign)
     return capture_coord if capture_coord.valid?
   end
 
   def to_s
     color_text(' ♟ ', @color)
+  end
+
+  def y_move_sign
+    black? ? -1 : 1
+  end
+
+  def can_capture_forward?
+    false
+  end
+
+  def move
+    @first_move = false
   end
 end
