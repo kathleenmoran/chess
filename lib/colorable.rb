@@ -33,4 +33,12 @@ module Colorable
   def print_invalid_coord_message(invalid_coord)
     puts color_text("'#{invalid_coord}' is not a valid coordinate.\n", :red)
   end
+
+  def print_invalid_start_square_message
+    puts color_text("There are no valid moves originating from the given coordinate.\n", :red)
+  end
+
+  def print_invalid_move_message
+    puts color_text("This is not a valid move for the selected piece.\n", :red)
+  end
 end

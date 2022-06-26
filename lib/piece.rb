@@ -10,6 +10,14 @@ class Piece
     @color = color
   end
 
+  def duplicable?
+    true
+  end
+
+  def deep_dup
+    duplicable? ? dup : self
+  end
+
   def self.for(coordinate)
     registry.find { |candidate| candidate.handles?(coordinate) }.new(piece_color(coordinate))
   end
@@ -65,4 +73,8 @@ class Piece
   def valid_en_passant_capture(start_coordinate) end
 
   def move() end
+
+  def capturable?
+    true
+  end
 end

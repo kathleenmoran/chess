@@ -22,6 +22,18 @@ class Square
     @color = square_color(@coordinate)
   end
 
+  def duplicable?
+    true
+  end
+
+  def deep_dup
+    duplicable? ? dup : self
+  end
+
+  def ==(other)
+    self.class == other.class && @coordinate == other.coordinate
+  end
+
   def eql?(other)
     @coordinate.eql?(other.coordinate)
   end
@@ -68,5 +80,9 @@ class Square
 
   def move_piece
     @piece.move
+  end
+
+  def piece_capturable?
+    @piece.capturable?
   end
 end

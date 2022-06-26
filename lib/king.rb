@@ -17,4 +17,8 @@ class King < Piece
   def to_s
     color_text(' ♚ ', @color)
   end
+
+  def capturable?
+    false
+  end
 end

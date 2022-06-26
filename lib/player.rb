@@ -6,12 +6,26 @@ require_relative 'colorable'
 # a player of a chess game
 class Player
   include Colorable
+  attr_reader :color, :checked
   def initialize(color)
     @color = color
+    @checked = false
   end
 
   def to_s
     @color.to_s.capitalize
+  end
+
+  def check
+    @check = true
+  end
+
+  def uncheck
+    @check = false
+  end
+
+  def checked?
+    @checked
   end
 
   def white?
@@ -24,6 +38,10 @@ class Player
 
   def own_piece_at_square?(square)
     (white? && square.occupied_by_white?) || (black? && square.occupied_by_black?)
+  end
+
+  def does_not_own_piece_at_square?(square)
+    (white? && square.occupied_by_black?) || (black? && square.occupied_by_white?)
   end
 
   def select_start_square
@@ -52,5 +70,3 @@ class Player
     Coordinate.new(alpha_coord[0].upcase.ord - 65, alpha_coord[1].to_i - 1)
   end
 end
-
-Player.new(:black).select_end_square
