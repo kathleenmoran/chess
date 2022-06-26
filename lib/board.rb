@@ -27,11 +27,15 @@ class Board
 
   def valid_move?(start_coordinate, end_coordinate, player)
     player.own_piece_at_square?(find_square(start_coordinate)) &&
-      reachable_squares(start_coordinate, player).include?(find_square(end_coordinate))
+      legal_moves(start_coordinate, player).include?(find_square(end_coordinate))
   end
 
   def make_board
     (0...Constants::BOARD_DIMENSION).to_a.map { |y_coord| make_row(y_coord) }
+  end
+
+  def legal_moves(coordinate, player)
+    reachable_squares(coordinate, player).select { |square| square.piece_capturable? }
   end
 
   def reachable_squares(coordinate, player)
@@ -45,7 +49,6 @@ class Board
 
   def filter_illegal_moves(start_square, move_squares, player)
     move_squares.reject do |square|
-      p 'hello'
       new_board = deep_dup
       new_board.move_piece(start_square.coordinate, square.coordinate)
       new_board.check?(player)
@@ -116,11 +119,11 @@ class Board
   end
 
   def select_piece(coord, player)
-    highlight_piece_and_moves(find_square(coord), reachable_squares(coord, player))
+    highlight_piece_and_moves(find_square(coord), legal_moves(coord, player))
   end
 
   def deselect_piece(coord, player)
-    remove_square_highlights([find_square(coord)] + reachable_squares(coord, player))
+    remove_square_highlights([find_square(coord)] + legal_moves(coord, player))
   end
 
   def highlight_piece_and_moves(piece_square, move_squares)
@@ -149,7 +152,7 @@ class Board
   end
 
   def valid_start_square?(coordinate, player)
-    player.own_piece_at_square?(find_square(coordinate)) && !reachable_squares(coordinate, player).empty?
+    player.own_piece_at_square?(find_square(coordinate)) && !legal_moves(coordinate, player).empty?
   end
 
   private
