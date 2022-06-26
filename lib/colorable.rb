@@ -2,7 +2,7 @@
 
 # ability to color text using ANSI escape codes
 module Colorable
-  COLOR_CODES = { black: 0, dark_green: 22, light_green: 150, neon_green: 10, red: 9, white: 231, yellow: 220 }.freeze
+  COLOR_CODES = { black: 0, dark_green: 22, light_green: 150, neon_green: 10, orange: 208, red: 9, white: 231, yellow: 220 }.freeze
 
   def color_text(text, color)
     "\033[38;5;#{COLOR_CODES[color]}m#{text}\033[0m"

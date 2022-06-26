@@ -98,7 +98,7 @@ class Board
   end
 
   def highlight_king(player)
-    find_king_square(player).highlight(:red)
+    find_king_square(player).highlight(:orange)
   end
 
   def unhighlight_king(player)
