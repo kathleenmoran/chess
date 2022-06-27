@@ -30,6 +30,11 @@ class Square
     self.class == other.class && @coordinate == other.coordinate
   end
 
+  def piece_color
+    return :white if occupied_by_white?
+    return :black if occupied_by_black?
+  end
+
   def eql?(other)
     @coordinate.eql?(other.coordinate)
   end
@@ -84,5 +89,26 @@ class Square
 
   def valid_piece_captures
     @piece.valid_captures(@coordinate)
+  end
+
+  def piece_promotable?
+    @piece.promotable? && ((@coordinate.in_first_row? && occupied_by_black?) || (@coordinate.in_last_row? && occupied_by_white?))
+  end
+
+  def promote_piece
+    user_input = prompt_promotion_selection
+    case user_input.downcase
+    when 'queen'
+      @piece = Queen.new(piece_color)
+    when 'rook'
+      @piece = Rook.new(piece_color)
+    when 'bishop'
+      @piece = Bishop.new(piece_color)
+    when 'knight'
+      @piece = Knight.new(piece_color)
+    else
+      print_invalid_promotion_message
+      promote_piece
+    end
   end
 end

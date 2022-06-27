@@ -73,4 +73,8 @@ class Piece
   def capturable?
     true
   end
+
+  def promotable?
+    false
+  end
 end

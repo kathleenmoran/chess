@@ -58,4 +58,12 @@ class Coordinate
   def x_and_y_both_even_or_odd?
     @x.even? == @y.even?
   end
+
+  def in_first_row?
+    @y.zero?
+  end
+
+  def in_last_row?
+    @y == 7
+  end
 end

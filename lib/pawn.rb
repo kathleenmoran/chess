@@ -47,4 +47,8 @@ class Pawn < Piece
   def move
     @first_move = false
   end
+
+  def promotable?
+    true
+  end
 end

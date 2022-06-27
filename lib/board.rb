@@ -181,6 +181,7 @@ class Board
     end_square.place_piece(start_square.piece)
     start_square.remove_piece
     end_square.move_piece
+    end_square.promote_piece if end_square.piece_promotable?
   end
 
   def valid_start_square?(coordinate, player)
