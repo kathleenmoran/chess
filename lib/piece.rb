@@ -10,12 +10,8 @@ class Piece
     @color = color
   end
 
-  def duplicable?
-    true
-  end
-
   def deep_dup
-    duplicable? ? dup : self
+    Piece.new(@color)
   end
 
   def self.for(coordinate)

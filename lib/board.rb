@@ -13,12 +13,16 @@ class Board
     @board = board
   end
 
-  def duplicable?
-    true
-  end
-
   def deep_dup
-    duplicable? ? dup : self
+    new_values = []
+    @board.each do |row|
+      new_row = []
+      row.each do |square|
+        new_row << square.deep_dup
+      end
+      new_values << new_row
+    end
+    Board.new(new_values)
   end
 
   def to_s
@@ -44,7 +48,11 @@ class Board
       .valid_moves_of_piece
       .reduce([]) do |filtered_moves, path|
         filtered_moves + reachable_squares_in_a_path(path, player, piece_square)
-      end
+      end + diagonal_captures(piece_square, player)
+  end
+
+  def diagonal_captures(piece_square, player)
+    piece_square.valid_piece_captures.map { |coordinate| find_square(coordinate) }.select { |square| player.does_not_own_piece_at_square?(square) }
   end
 
   def filter_illegal_moves(start_square, move_squares, player)
@@ -94,11 +102,17 @@ class Board
   end
 
   def color_king(player, opponent)
-    check?(player, opponent) ? highlight_king(player) : unhighlight_king(player)
+    if checkmate?(player, opponent)
+      highlight_king(player, :red)
+    elsif check?(player, opponent)
+      highlight_king(player, :orange)
+    else
+      unhighlight_king(player)
+    end
   end
 
-  def highlight_king(player)
-    find_king_square(player).highlight(:orange)
+  def highlight_king(player, color)
+    find_king_square(player).highlight(color)
   end
 
   def unhighlight_king(player)
@@ -106,7 +120,25 @@ class Board
   end
 
   def checkmate?(player, opponent)
-    check?(player, opponent) && king_has_no_valid_moves?(player, opponent)
+    check?(player, opponent) && no_way_out_of_check?(player, opponent)
+  end
+
+  def no_way_out_of_check?(player, opponent)
+    @board.all? do |row|
+      row.all? do |square|
+        player.does_not_own_piece_at_square?(square) || (player.own_piece_at_square?(square) && all_moves_result_in_check?(player, opponent, square))
+      end
+    end
+  end
+
+  def all_moves_result_in_check?(player, opponent, start_square)
+    legal_moves(start_square.coordinate, player).all? { |end_square| move_results_in_check?(player, opponent, start_square, end_square) }
+  end
+
+  def move_results_in_check?(player, opponent, start_square, end_square)
+    new_board = deep_dup
+    new_board.move_piece(start_square.coordinate, end_square.coordinate)
+    new_board.check?(player, opponent)
   end
 
   def stalemate?(player, opponent)

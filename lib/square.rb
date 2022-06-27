@@ -16,18 +16,14 @@ class Square
   attr_reader :coordinate
   attr_reader :piece
 
-  def initialize(coordinate)
+  def initialize(coordinate, piece = Piece.for(coordinate))
     @coordinate = coordinate
-    @piece = Piece.for(@coordinate)
+    @piece = piece
     @color = square_color(@coordinate)
   end
 
-  def duplicable?
-    true
-  end
-
   def deep_dup
-    duplicable? ? dup : self
+    Square.new(@coordinate, @piece.deep_dup)
   end
 
   def ==(other)
@@ -84,5 +80,9 @@ class Square
 
   def piece_capturable?
     @piece.capturable?
+  end
+
+  def valid_piece_captures
+    @piece.valid_captures(@coordinate)
   end
 end

@@ -8,6 +8,10 @@ class NoPiece < Piece
     coordinate.in?((0..7).to_a, (2..5).to_a)
   end
 
+  def deep_dup
+    NoPiece.new(@color)
+  end
+
   def to_s
     '   '
   end

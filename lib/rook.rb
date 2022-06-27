@@ -17,4 +17,8 @@ class Rook < Piece
   def to_s
     color_text(' ♜ ', @color)
   end
+
+  def deep_dup
+    Rook.new(@color)
+  end
 end

@@ -9,6 +9,10 @@ class Pawn < Piece
     @first_move = first_move
   end
 
+  def deep_dup
+    Pawn.new(@color, @first_move)
+  end
+
   def self.handles?(coordinate)
     coordinate.in?(Constants::PAWN_X_COORDINATES, Constants::PAWN_Y_COORDINATES)
   end
