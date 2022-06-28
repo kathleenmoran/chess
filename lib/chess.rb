@@ -19,7 +19,7 @@ class Chess
   def play_turn
     start_coord = select_piece
     end_coord = select_move(start_coord)
-    @board.move_piece(start_coord, end_coord)
+    @board.move_piece(start_coord, end_coord, @active_player)
     manage_check_warnings
     puts @board
   end

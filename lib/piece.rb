@@ -6,12 +6,9 @@ require_relative 'constants'
 # a chess piece
 class Piece
   include Colorable
+  attr_reader :color
   def initialize(color = nil)
     @color = color
-  end
-
-  def deep_dup
-    Piece.new(@color)
   end
 
   def self.for(coordinate)
@@ -66,15 +63,21 @@ class Piece
     []
   end
 
-  def valid_en_passant_capture(start_coordinate) end
+  def valid_en_passant_capture(end_coordinate)
+    nil
+  end
 
-  def move() end
+  def move(start_coordinate, end_coordinate, player) end
 
   def capturable?
     true
   end
 
   def promotable?
+    false
+  end
+
+  def moved_by_two?
     false
   end
 end

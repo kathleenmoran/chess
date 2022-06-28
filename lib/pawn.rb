@@ -4,13 +4,14 @@ require_relative 'piece'
 
 # a pawn piece
 class Pawn < Piece
-  def initialize(color, first_move: true)
+  def initialize(color, first_move: true, moved_by_two: false)
     super(color)
     @first_move = first_move
+    @moved_by_two = moved_by_two
   end
 
   def deep_dup
-    Pawn.new(@color, @first_move)
+    Pawn.new(@color, @first_move, @moved_by_two)
   end
 
   def self.handles?(coordinate)
@@ -28,6 +29,7 @@ class Pawn < Piece
   end
 
   def valid_en_passant_capture(end_coordinate)
+    p 'hello'
     capture_coord = end_coordinate.transform(0, -1 * y_move_sign)
     return capture_coord if capture_coord.valid?
   end
@@ -44,8 +46,13 @@ class Pawn < Piece
     false
   end
 
-  def move
+  def move(start_coord, end_coord, player)
+    @moved_by_two = true if start_coord.moved_two_vertically?(end_coord) && @first_move == true
     @first_move = false
+  end
+
+  def moved_by_two?
+    @moved_by_two
   end
 
   def promotable?

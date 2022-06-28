@@ -23,7 +23,7 @@ class Square
   end
 
   def deep_dup
-    Square.new(@coordinate, @piece.deep_dup)
+    Square.new(@coordinate.deep_dup, @piece.deep_dup)
   end
 
   def ==(other)
@@ -79,8 +79,10 @@ class Square
     @piece.can_capture_forward?
   end
 
-  def move_piece
-    @piece.move
+  def move_piece(start_coord, end_coord, player)
+    p @piece.class
+    p @piece.color
+    @piece.move(start_coord, end_coord, player)
   end
 
   def piece_capturable?
@@ -93,6 +95,14 @@ class Square
 
   def piece_promotable?
     @piece.promotable? && ((@coordinate.in_first_row? && occupied_by_black?) || (@coordinate.in_last_row? && occupied_by_white?))
+  end
+
+  def en_passant_capture_square?
+    @piece.moved_by_two?
+  end
+
+  def piece_valid_en_passant_capture
+    @piece.valid_en_passant_capture(@coordinate)
   end
 
   def promote_piece

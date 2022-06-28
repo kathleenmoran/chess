@@ -16,7 +16,7 @@ class Coordinate
   end
 
   def deep_dup
-    duplicable? ? dup : self
+    Coordinate.new(@x, @y)
   end
 
   def transform(x_increment, y_increment)
@@ -65,5 +65,9 @@ class Coordinate
 
   def in_last_row?
     @y == 7
+  end
+
+  def moved_two_vertically?(other)
+    @x == other.x && (@y - other.y).abs == 2
   end
 end

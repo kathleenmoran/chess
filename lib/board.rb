@@ -9,20 +9,23 @@ require_relative 'colorable'
 # a chessboard
 class Board
   include Colorable
-  def initialize(board = make_board)
+  def initialize(board = make_board, en_passants = [])
     @board = board
+    @en_passants = en_passants
   end
 
   def deep_dup
-    new_values = []
-    @board.each do |row|
-      new_row = []
-      row.each do |square|
-        new_row << square.deep_dup
-      end
-      new_values << new_row
+    Board.new(deep_dup_board, deep_dup_en_passants)
+  end
+
+  def deep_dup_board
+    @board.map do |row|
+      row.map(&:deep_dup)
     end
-    Board.new(new_values)
+  end
+
+  def deep_dup_en_passants
+    @en_passants.map(&:deep_dup)
   end
 
   def to_s
@@ -39,7 +42,7 @@ class Board
   end
 
   def legal_moves(coordinate, player)
-    reachable_squares(coordinate, player).select { |square| square.piece_capturable? }
+    reachable_squares(coordinate, player).select(&:piece_capturable?)
   end
 
   def reachable_squares(coordinate, player)
@@ -52,14 +55,25 @@ class Board
   end
 
   def diagonal_captures(piece_square, player)
-    piece_square.valid_piece_captures.map { |coordinate| find_square(coordinate) }.select { |square| player.does_not_own_piece_at_square?(square) }
+    piece_square.valid_piece_captures.map { |coordinate| find_square(coordinate) }.select do |square|
+      player.does_not_own_piece_at_square?(square) || can_move_diagonal_by_en_passant?(square, player)
+    end
   end
 
-  def filter_illegal_moves(start_square, move_squares, player)
-    move_squares.reject do |square|
-      new_board = deep_dup
-      new_board.move_piece(start_square.coordinate, square.coordinate)
-      new_board.check?(player)
+  def can_move_diagonal_by_en_passant?(square, player)
+    if player.black?
+      find_square(Coordinate.new(square.coordinate.x, square.coordinate.y + 1)).en_passant_capture_square? &&
+      player.does_not_own_piece_at_square?(find_square(Coordinate.new(square.coordinate.x, square.coordinate.y + 1))) && @en_passants.include?(en_passant_square(square, player))
+    elsif player.white?
+      find_square(Coordinate.new(square.coordinate.x, square.coordinate.y - 1)).en_passant_capture_square? && player.does_not_own_piece_at_square?(find_square(Coordinate.new(square.coordinate.x, square.coordinate.y - 1))) && @en_passants.include?(en_passant_square(square, player))
+    end
+  end
+
+  def en_passant_square(square, player)
+    if player.black?
+      find_square(Coordinate.new(square.coordinate.x, square.coordinate.y + 1))
+    elsif player.white?
+      find_square(Coordinate.new(square.coordinate.x, square.coordinate.y - 1))
     end
   end
 
@@ -175,13 +189,16 @@ class Board
     @board[coordinate.y][coordinate.x]
   end
 
-  def move_piece(start_coord, end_coord)
+  def move_piece(start_coord, end_coord, player)
     start_square = find_square(start_coord)
     end_square = find_square(end_coord)
     end_square.place_piece(start_square.piece)
     start_square.remove_piece
-    end_square.move_piece
+    end_square.move_piece(start_coord, end_coord, player)
     end_square.promote_piece if end_square.piece_promotable?
+    en_passant_square(end_square, player).remove_piece if @en_passants.include?(en_passant_square(end_square, player))
+    @en_passants << end_square if end_square.en_passant_capture_square?
+    @en_passants = @en_passants.select { |square| player.own_piece_at_square?(square) }
   end
 
   def valid_start_square?(coordinate, player)
