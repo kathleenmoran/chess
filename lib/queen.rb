@@ -13,6 +13,10 @@ class Queen < Piece
     coordinate.in?(Constants::QUEEN_X_COORDINATES, Constants::NOT_PAWN_Y_COORDINATES)
   end
 
+  def self.handles_promotion?(user_input)
+    user_input == 'queen'
+  end
+
   def valid_moves(start_coordinate)
     diagonal_valid_moves(start_coordinate) + plus_valid_moves(start_coordinate)
   end

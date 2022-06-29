@@ -84,8 +84,6 @@ class Square
   end
 
   def move_piece(start_coord, end_coord, player)
-    p @piece.class
-    p @piece.color
     @piece.move(start_coord, end_coord, player)
   end
 
@@ -110,19 +108,12 @@ class Square
   end
 
   def promote_piece
-    user_input = prompt_promotion_selection
-    case user_input.downcase
-    when 'queen'
-      @piece = Queen.new(piece_color)
-    when 'rook'
-      @piece = Rook.new(piece_color)
-    when 'bishop'
-      @piece = Bishop.new(piece_color)
-    when 'knight'
-      @piece = Knight.new(piece_color)
-    else
+    new_piece = Piece.promotion(prompt_promotion_selection.downcase, piece_color)
+    if new_piece.nil?
       print_invalid_promotion_message
       promote_piece
+    else
+      @piece = new_piece
     end
   end
 end

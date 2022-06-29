@@ -43,11 +43,12 @@ module Colorable
   end
 
   def prompt_promotion_selection
-    puts "The pawn you have just moved is up for promotion, please enter 'queen', 'rook', 'bishop', or 'knight' to promote it:"
+    puts color_text("The pawn you have just moved is up for promotion, please enter 'queen', 'rook', "\
+    "bishop', or 'knight' to promote it:", :neon_green)
     gets.chomp
   end
 
   def print_invalid_promotion_message
-    puts color_text('That is not a valid input for piece promotion.', :red)
+    puts color_text("That is not a valid input for piece promotion.\n", :red)
   end
 end

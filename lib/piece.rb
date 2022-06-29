@@ -15,6 +15,11 @@ class Piece
     registry.find { |candidate| candidate.handles?(coordinate) }.new(piece_color(coordinate))
   end
 
+  def self.promotion(user_input, piece_color)
+    piece_class = registry.find { |candidate| candidate.handles_promotion?(user_input) }
+    piece_class ? piece_class.new(piece_color) : nil
+  end
+
   def self.piece_color(coordinate)
     if coordinate.y_between?(0, 1)
       :white
@@ -36,6 +41,10 @@ class Piece
   end
 
   def self.handles?(_coordinate)
+    false
+  end
+
+  def self.handles_promotion?(_user_input)
     false
   end
 

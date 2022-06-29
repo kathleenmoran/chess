@@ -8,6 +8,10 @@ class Knight < Piece
     coordinate.in?(Constants::KNIGHT_X_COORDINATES, Constants::NOT_PAWN_Y_COORDINATES)
   end
 
+  def self.handles_promotion?(user_input)
+    user_input == 'knight'
+  end
+
   def deep_dup
     Knight.new(@color)
   end

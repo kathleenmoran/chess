@@ -103,7 +103,6 @@ class Board
 
   def can_castle_kingside?(player)
     return false if !find_king_square(player).unmoved? || !find_square(player.kingside_rook_coord).unmoved?
-    p find_square(player.kingside_rook_coord.transform(-2, 0))
     [find_square(player.kingside_rook_coord.transform(-1, 0))].all? do |square|
       !square.occupied?
     end

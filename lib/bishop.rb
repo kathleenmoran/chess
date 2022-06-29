@@ -14,6 +14,10 @@ class Bishop < Piece
     Bishop.new(@color)
   end
 
+  def self.handles_promotion?(user_input)
+    user_input == 'bishop'
+  end
+
   def self.handles?(coordinate)
     coordinate.in?(Constants::BISHOP_X_COORDINATES, Constants::NOT_PAWN_Y_COORDINATES)
   end

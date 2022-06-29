@@ -6,22 +6,13 @@ require_relative 'colorable'
 # a player of a chess game
 class Player
   include Colorable
-  attr_reader :color, :checked
+  attr_reader :color
   def initialize(color)
     @color = color
-    @checked = false
   end
 
   def to_s
     @color.to_s.capitalize
-  end
-
-  def check
-    @check = true
-  end
-
-  def uncheck
-    @check = false
   end
 
   def checked?

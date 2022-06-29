@@ -15,6 +15,10 @@ class Rook < Piece
     coordinate.in?(Constants::ROOK_X_COORDINATES, Constants::NOT_PAWN_Y_COORDINATES)
   end
 
+  def self.handles_promotion?(user_input)
+    user_input == 'rook'
+  end
+
   def valid_moves(start_coordinate)
     plus_valid_moves(start_coordinate)
   end
