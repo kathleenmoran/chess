@@ -36,6 +36,22 @@ class Player
     @color == :black
   end
 
+  def queenside_rook_coord
+    Coordinate.new(0, piece_row)
+  end
+
+  def kingside_rook_coord
+    Coordinate.new(7, piece_row)
+  end
+
+  def piece_row
+    if white?
+      0
+    elsif black?
+      7
+    end
+  end
+
   def own_piece_at_square?(square)
     (white? && square.occupied_by_white?) || (black? && square.occupied_by_black?)
   end

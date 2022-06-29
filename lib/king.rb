@@ -4,12 +4,21 @@ require_relative 'piece'
 
 # a king piece
 class King < Piece
+  def initialize(color, first_move: true)
+    super(color)
+    @first_move = first_move
+  end
+
   def self.handles?(coordinate)
     coordinate.in?(Constants::KING_X_COORDINATES, Constants::NOT_PAWN_Y_COORDINATES)
   end
 
   def deep_dup
-    King.new(@color)
+    King.new(@color, @first_move)
+  end
+
+  def unmoved?
+    @first_move
   end
 
   def valid_moves(start_coordinate)
@@ -24,5 +33,9 @@ class King < Piece
 
   def capturable?
     false
+  end
+
+  def move(start_coord, end_coord, player)
+    @first_move = false
   end
 end

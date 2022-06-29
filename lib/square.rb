@@ -47,6 +47,10 @@ class Square
     @piece.occupant?
   end
 
+  def unmoved?
+    @piece.unmoved?
+  end
+
   def occupied_by_white?
     @piece.white?
   end

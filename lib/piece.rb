@@ -63,9 +63,7 @@ class Piece
     []
   end
 
-  def valid_en_passant_capture(end_coordinate)
-    nil
-  end
+  def valid_en_passant_capture(end_coordinate) end
 
   def move(start_coordinate, end_coordinate, player) end
 
@@ -78,6 +76,10 @@ class Piece
   end
 
   def moved_by_two?
+    false
+  end
+
+  def unmoved?
     false
   end
 end
