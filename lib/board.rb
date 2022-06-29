@@ -9,8 +9,8 @@ require_relative 'colorable'
 # a chessboard
 class Board
   include Colorable
-  def initialize(board = make_board, en_passants = [])
-    @board = board
+  def initialize(squares = make_board, en_passants = [])
+    @squares = squares
     @en_passants = en_passants
   end
 
@@ -19,7 +19,7 @@ class Board
   end
 
   def deep_dup_board
-    @board.map do |row|
+    @squares.map do |row|
       row.map(&:deep_dup)
     end
   end
@@ -29,7 +29,7 @@ class Board
   end
 
   def to_s
-    @board.reverse.map(&:join).join("\n")
+    @squares.reverse.map(&:join).join("\n")
   end
 
   def valid_move?(start_coordinate, end_coordinate, player)
@@ -128,7 +128,7 @@ class Board
   end
 
   def find_king_square(player)
-    @board.each do |row|
+    @squares.each do |row|
       row.each do |square|
         return square if player.own_piece_at_square?(square) && !square.piece_capturable?
       end
@@ -136,7 +136,7 @@ class Board
   end
 
   def check?(player, opponent, kings_square = find_king_square(player))
-    @board.any? do |row|
+    @squares.any? do |row|
       row.any? do |square|
         opponent.own_piece_at_square?(square) && reachable_squares(square.coordinate, opponent).include?(kings_square)
       end
@@ -170,7 +170,7 @@ class Board
   end
 
   def no_way_out_of_check?(player, opponent)
-    @board.all? do |row|
+    @squares.all? do |row|
       row.all? do |square|
         player.does_not_own_piece_at_square?(square) || (player.own_piece_at_square?(square) && all_moves_result_in_check?(player, opponent, square))
       end
@@ -218,7 +218,7 @@ class Board
   end
 
   def find_square(coordinate)
-    @board[coordinate.y][coordinate.x]
+    @squares[coordinate.y][coordinate.x]
   end
 
   def queenside_castle_move?(start_coord, end_coord)
