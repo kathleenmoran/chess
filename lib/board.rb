@@ -9,9 +9,9 @@ require_relative 'colorable'
 # a chessboard
 class Board
   include Colorable
-  def initialize(squares = make_board, en_passants = [])
+  def initialize(squares = make_board, en_passant_squares = [])
     @squares = squares
-    @en_passants = en_passants
+    @en_passant_squares = en_passant_squares
   end
 
   def deep_dup
@@ -25,7 +25,7 @@ class Board
   end
 
   def deep_dup_en_passants
-    @en_passants.map(&:deep_dup)
+    @en_passant_squares.map(&:deep_dup)
   end
 
   def to_s
@@ -66,9 +66,9 @@ class Board
   def can_move_diagonal_by_en_passant?(square, player)
     if player.black?
       find_square(Coordinate.new(square.coordinate.x, square.coordinate.y + 1)).en_passant_capture_square? &&
-      player.does_not_own_piece_at_square?(find_square(Coordinate.new(square.coordinate.x, square.coordinate.y + 1))) && @en_passants.include?(en_passant_square(square, player))
+      player.does_not_own_piece_at_square?(find_square(Coordinate.new(square.coordinate.x, square.coordinate.y + 1))) && @en_passant_squares.include?(en_passant_square(square, player))
     elsif player.white?
-      find_square(Coordinate.new(square.coordinate.x, square.coordinate.y - 1)).en_passant_capture_square? && player.does_not_own_piece_at_square?(find_square(Coordinate.new(square.coordinate.x, square.coordinate.y - 1))) && @en_passants.include?(en_passant_square(square, player))
+      find_square(Coordinate.new(square.coordinate.x, square.coordinate.y - 1)).en_passant_capture_square? && player.does_not_own_piece_at_square?(find_square(Coordinate.new(square.coordinate.x, square.coordinate.y - 1))) && @en_passant_squares.include?(en_passant_square(square, player))
     end
   end
 
@@ -236,9 +236,9 @@ class Board
     start_square.remove_piece
     end_square.move_piece(start_coord, end_coord, player)
     end_square.promote_piece if end_square.piece_promotable?
-    en_passant_square(end_square, player).remove_piece if @en_passants.include?(en_passant_square(end_square, player))
-    @en_passants << end_square if end_square.en_passant_capture_square?
-    @en_passants = @en_passants.select { |square| player.own_piece_at_square?(square) }
+    en_passant_square(end_square, player).remove_piece if @en_passant_squares.include?(en_passant_square(end_square, player))
+    @en_passant_squares << end_square if end_square.en_passant_capture_square?
+    @en_passant_squares = @en_passant_squares.select { |square| player.own_piece_at_square?(square) }
   end
 
   def valid_start_square?(coordinate, player)
