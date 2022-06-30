@@ -15,17 +15,13 @@ class Board
   end
 
   def deep_dup
-    Board.new(deep_dup_squares, deep_dup_en_passant_square)
+    Board.new(deep_dup_squares, @en_passant_square.deep_dup)
   end
 
   def deep_dup_squares
     @squares.map do |row|
       row.map(&:deep_dup)
     end
-  end
-
-  def deep_dup_en_passant_square
-    @en_passant_square.deep_dup
   end
 
   def to_s
@@ -56,9 +52,8 @@ class Board
     move_squares = []
     return move_squares unless start_square.occupied_by_king?
 
-    move_squares << start_square.queeenside_castle_piece_move if can_castle_queenside?(player)
-
-    move_squares << start_square.kingside_castle_piece_move if can_castle_kingside?(player)
+    move_squares << find_square(start_square.queenside_castle_piece_move) if can_castle_queenside?(player)
+    move_squares << find_square(start_square.kingside_castle_piece_move) if can_castle_kingside?(player)
 
     move_squares
   end
@@ -90,12 +85,10 @@ class Board
       @en_passant_square == potential_en_passant_square
   end
 
-  def en_passant_square(square, player)
-    if player.black?
-      find_square(Coordinate.new(square.coordinate.x, square.coordinate.y + 1)) if Coordinate.new(square.coordinate.x, square.coordinate.y + 1).valid?
-    elsif player.white?
-      find_square(Coordinate.new(square.coordinate.x, square.coordinate.y - 1)) if Coordinate.new(square.coordinate.x, square.coordinate.y - 1).valid?
-    end
+  def can_castle?(player, path, rook_coord)
+    return false if !find_king_square(player).unmoved? || !find_square(rook_coord).unmoved?
+
+    find_squares(path).all? { |square| !square.occupied? }
   end
 
   def reachable_squares_in_a_path(path, player, piece_square)
@@ -112,32 +105,32 @@ class Board
   end
 
   def can_castle_queenside?(player)
-    return false if !find_king_square(player).unmoved? || !find_square(player.queenside_rook_coord).unmoved?
-
-    [find_square(player.queenside_rook_coord.transform(1, 0)), find_square(player.queenside_rook_coord.transform(2, 0)), find_square(player.queenside_rook_coord.transform(3, 0))].all? do |square| 
-      !square.occupied?
-    end
+    can_castle?(player, player.queenside_castle_path, player.queenside_rook_coord)
   end
 
   def can_castle_kingside?(player)
-    return false if !find_king_square(player).unmoved? || !find_square(player.kingside_rook_coord).unmoved?
-    [find_square(player.kingside_rook_coord.transform(-1, 0))].all? do |square|
-      !square.occupied?
-    end
+    can_castle?(player, player.kingside_castle_path, player.kingside_rook_coord)
+  end
+
+  def castle(player, rook_start_square, rook_end_square, king_start_square, king_end_square)
+    make_normal_move(rook_start_square, rook_end_square, player)
+    make_normal_move(king_start_square, king_end_square, player)
   end
 
   def castle_queenside(player)
-    rook_coord = player.queenside_rook_coord
-    king_coord = find_king_square(player).coordinate
-    move_piece(rook_coord, rook_coord.transform(3, 0), player)
-    move_piece(king_coord, king_coord.transform(-2, 0), player)
+    rook_start_square = find_square(player.queenside_rook_coord)
+    rook_end_square = find_square(rook_start_square.queenside_castle_piece_move)
+    king_start_square = find_king_square(player)
+    king_end_square = find_square(king_start_square.queenside_castle_piece_move)
+    castle(player, rook_start_square, rook_end_square, king_start_square, king_end_square)
   end
 
   def castle_kingside(player)
-    rook_coord = player.kingside_rook_coord
-    king_coord = find_king_square(player).coordinate
-    move_piece(rook_coord, rook_coord.transform(-2, 0), player)
-    move_piece(king_coord, king_coord.transform(2, 0), player)
+    rook_start_square = find_square(player.kingside_rook_coord)
+    rook_end_square = find_square(rook_start_square.kingside_castle_piece_move)
+    king_start_square = find_king_square(player)
+    king_end_square = find_square(king_start_square.kingside_castle_piece_move)
+    castle(player, rook_start_square, rook_end_square, king_start_square, king_end_square)
   end
 
   def valid_move_with_piece?(player, square, piece_square)
@@ -159,10 +152,6 @@ class Board
         opponent.own_piece_at_square?(square) && reachable_squares(square.coordinate, opponent).include?(kings_square)
       end
     end
-  end
-
-  def valid_king_move?(coordinate, player, opponent)
-    !check?(player, opponent, find_square(coordinate))
   end
 
   def color_king(player, opponent)
@@ -209,11 +198,6 @@ class Board
     !check?(player, opponent) && king_has_no_valid_moves?(player, opponent)
   end
 
-  def king_has_no_valid_moves?(player, opponent)
-    valid_move_squares = reachable_squares(find_king_square(player).coordinate, player, opponent)
-    valid_move_squares.all? { |square| check?(player, opponent, square) }
-  end
-
   def select_piece(coord, player)
     highlight_piece_and_moves(find_square(coord), legal_moves(coord, player))
   end
@@ -236,15 +220,17 @@ class Board
   end
 
   def find_square(coordinate)
+    return if coordinate.nil?
+
     @squares[coordinate.y][coordinate.x]
   end
 
   def queenside_castle_move?(start_coord, end_coord)
-    !find_square(start_coord).piece_capturable? && end_coord == start_coord.transform(-2, 0)
+    find_square(start_coord).occupied_by_king? && end_coord == start_coord.transform(-2, 0)
   end
 
   def kingside_castle_move?(start_coord, end_coord)
-    !find_square(start_coord).piece_capturable? && end_coord == start_coord.transform(2, 0)
+    find_square(start_coord).occupied_by_king? && end_coord == start_coord.transform(2, 0)
   end
 
   def update_with_move(start_coord, end_coord, player)
@@ -252,7 +238,7 @@ class Board
     end_square = find_square(end_coord)
 
     potential_en_passant_square = find_square(end_square.piece_en_passant_coord(start_square))
-    @en_passant_square.remove_piece if potential_en_passant_square == @en_passant_square
+    @en_passant_square.remove_piece if !@en_passant_square.nil? && potential_en_passant_square == @en_passant_square
 
     make_move(start_square, end_square, player)
 
@@ -265,10 +251,20 @@ class Board
     @en_passant_square = end_square.en_passant_capture_square? ? end_square : nil
   end
 
-  def make_move(start_square, end_square, player)
+  def make_normal_move(start_square, end_square, player)
     end_square.place_piece(start_square.piece)
     start_square.remove_piece
     end_square.move_piece(start_square.coordinate, end_square.coordinate, player)
+  end
+
+  def make_move(start_square, end_square, player)
+    if queenside_castle_move?(start_square.coordinate, end_square.coordinate)
+      castle_queenside(player)
+    elsif kingside_castle_move?(start_square.coordinate, end_square.coordinate)
+      castle_kingside(player)
+    else
+      make_normal_move(start_square, end_square, player)
+    end
   end
 
   def valid_start_square?(coordinate, player)

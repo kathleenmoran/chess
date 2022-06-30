@@ -19,13 +19,7 @@ class Chess
   def play_turn
     start_coord = select_piece
     end_coord = select_move(start_coord)
-    if @board.queenside_castle_move?(start_coord, end_coord)
-      @board.castle_queenside(@active_player)
-    elsif @board.kingside_castle_move?(start_coord, end_coord)
-      @board.castle_kingside(@active_player)
-    else
-      @board.update_with_move(start_coord, end_coord, @active_player)
-    end
+    @board.update_with_move(start_coord, end_coord, @active_player)
     manage_check_warnings
     puts @board
   end

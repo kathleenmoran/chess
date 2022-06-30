@@ -87,7 +87,7 @@ class Square
     @piece.move(start_coord, end_coord, player)
   end
 
-  def queeenside_castle_piece_move
+  def queenside_castle_piece_move
     @piece.queenside_castle_move(@coordinate)
   end
 
