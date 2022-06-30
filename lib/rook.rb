@@ -6,9 +6,17 @@ require_relative 'plusable'
 # a rook piece
 class Rook < Piece
   include Plusable
-  def initialize(color, first_move: true)
+  def initialize(color, unmoved: true)
     super(color)
-    @first_move = first_move
+    @unmoved = unmoved
+  end
+
+  def kingside_castle_move(start_coord)
+    start_coord.transform(-2, 0)
+  end
+
+  def queenside_castle_move(coord)
+    coord.transform(3, 0)
   end
 
   def self.handles?(coordinate)
@@ -19,8 +27,8 @@ class Rook < Piece
     user_input == 'rook'
   end
 
-  def valid_moves(start_coordinate)
-    plus_valid_moves(start_coordinate)
+  def valid_moves(start_coord)
+    plus_valid_moves(start_coord)
   end
 
   def to_s
@@ -28,14 +36,14 @@ class Rook < Piece
   end
 
   def deep_dup
-    Rook.new(@color, @first_move)
+    Rook.new(@color, @unmoved)
   end
 
   def unmoved?
-    @first_move
+    @unmoved
   end
 
-  def move(start_coord, end_coord, player)
-    @first_move = false
+  def move(_start_coord, _end_coord, _player)
+    @unmoved = false
   end
 end

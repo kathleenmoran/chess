@@ -20,6 +20,14 @@ class Piece
     piece_class ? piece_class.new(piece_color) : nil
   end
 
+  def king?
+    false
+  end
+
+  def capturable_by_en_passant?
+    false
+  end
+
   def self.piece_color(coordinate)
     if coordinate.y_between?(0, 1)
       :white
@@ -72,9 +80,24 @@ class Piece
     []
   end
 
-  def valid_en_passant_capture(end_coordinate) end
+  def en_passant_coord(end_coord, start_square)
+    coord = end_coord.transform(0, -1 * start_square.piece_y_move_sign)
+    return unless coord.valid?
 
-  def move(start_coordinate, end_coordinate, player) end
+    coord
+  end
+
+  def can_en_passant?
+    false
+  end
+
+  def y_move_sign
+    black? ? -1 : 1
+  end
+
+  def valid_en_passant_capture(end_coord) end
+
+  def move(start_coord, end_coord, player) end
 
   def capturable?
     true
@@ -84,11 +107,11 @@ class Piece
     false
   end
 
-  def moved_by_two?
-    false
-  end
-
   def unmoved?
     false
   end
+
+  def kingside_castle_move(coord) end
+
+  def queenside_castle_move(coord) end
 end

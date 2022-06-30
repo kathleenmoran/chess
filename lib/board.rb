@@ -9,67 +9,85 @@ require_relative 'colorable'
 # a chessboard
 class Board
   include Colorable
-  def initialize(squares = make_board, en_passant_squares = [])
+  def initialize(squares = make_board, en_passant_square = nil)
     @squares = squares
-    @en_passant_squares = en_passant_squares
+    @en_passant_square = en_passant_square
   end
 
   def deep_dup
-    Board.new(deep_dup_board, deep_dup_en_passants)
+    Board.new(deep_dup_squares, deep_dup_en_passant_square)
   end
 
-  def deep_dup_board
+  def deep_dup_squares
     @squares.map do |row|
       row.map(&:deep_dup)
     end
   end
 
-  def deep_dup_en_passants
-    @en_passant_squares.map(&:deep_dup)
+  def deep_dup_en_passant_square
+    @en_passant_square.deep_dup
   end
 
   def to_s
     @squares.reverse.map(&:join).join("\n")
   end
 
-  def valid_move?(start_coordinate, end_coordinate, player)
-    player.own_piece_at_square?(find_square(start_coordinate)) &&
-      legal_moves(start_coordinate, player).include?(find_square(end_coordinate))
+  def valid_move?(start_coord, end_coord, player)
+    player.own_piece_at_square?(find_square(start_coord)) &&
+      legal_moves(start_coord, player).include?(find_square(end_coord))
   end
 
   def make_board
     (0...Constants::BOARD_DIMENSION).to_a.map { |y_coord| make_row(y_coord) }
   end
 
-  def legal_moves(coordinate, player)
-    reachable_squares(coordinate, player).select(&:piece_capturable?)
+  def legal_moves(coord, player)
+    reachable_squares(coord, player).select(&:piece_capturable?)
   end
 
-  def reachable_squares(coordinate, player)
-    piece_square = find_square(coordinate)
-    squares = piece_square
+  def reachable_squares(coord, player)
+    start_square = find_square(coord)
+    normal_move_squares(start_square, player) +
+      diagonal_capture_squares(start_square, player) +
+      valid_king_castle_squares(start_square, player)
+  end
+
+  def valid_king_castle_squares(start_square, player)
+    move_squares = []
+    return move_squares unless start_square.occupied_by_king?
+
+    move_squares << start_square.queeenside_castle_piece_move if can_castle_queenside?(player)
+
+    move_squares << start_square.kingside_castle_piece_move if can_castle_kingside?(player)
+
+    move_squares
+  end
+
+  def normal_move_squares(start_square, player)
+    start_square
       .valid_moves_of_piece
-      .reduce([]) do |filtered_moves, path|
-        filtered_moves + reachable_squares_in_a_path(path, player, piece_square)
-      end + diagonal_captures(piece_square, player)
-    squares << find_square(find_king_square(player).coordinate.transform(-2, 0)) if !find_square(coordinate).piece_capturable? && can_castle_queenside?(player)
-    squares << find_square(find_king_square(player).coordinate.transform(2, 0)) if !find_square(coordinate).piece_capturable? && can_castle_kingside?(player) 
-    squares
+      .reduce([]) do |valid_end_squares, path|
+        valid_end_squares + reachable_squares_in_a_path(path, player, start_square)
+      end
   end
 
-  def diagonal_captures(piece_square, player)
-    piece_square.valid_piece_captures.map { |coordinate| find_square(coordinate) }.select do |square|
-      player.does_not_own_piece_at_square?(square) || can_move_diagonal_by_en_passant?(square, player)
-    end
+  def diagonal_capture_squares(start_square, player)
+    start_square
+      .valid_piece_captures
+      .map { |coord| find_square(coord) }
+      .select do |square|
+        player.does_not_own_piece_at_square?(square) ||
+          can_move_by_en_passant?(start_square, square, player)
+      end
   end
 
-  def can_move_diagonal_by_en_passant?(square, player)
-    if player.black?
-      find_square(Coordinate.new(square.coordinate.x, square.coordinate.y + 1)).en_passant_capture_square? &&
-      player.does_not_own_piece_at_square?(find_square(Coordinate.new(square.coordinate.x, square.coordinate.y + 1))) && @en_passant_squares.include?(en_passant_square(square, player))
-    elsif player.white?
-      find_square(Coordinate.new(square.coordinate.x, square.coordinate.y - 1)).en_passant_capture_square? && player.does_not_own_piece_at_square?(find_square(Coordinate.new(square.coordinate.x, square.coordinate.y - 1))) && @en_passant_squares.include?(en_passant_square(square, player))
-    end
+  def can_move_by_en_passant?(start_square, end_square, player)
+    en_passant_coord = end_square.piece_en_passant_coord(start_square)
+    return false if !start_square.piece_can_en_passant? || en_passant_coord.nil?
+
+    potential_en_passant_square = find_square(en_passant_coord)
+    player.does_not_own_piece_at_square?(potential_en_passant_square) &&
+      @en_passant_square == potential_en_passant_square
   end
 
   def en_passant_square(square, player)
@@ -229,16 +247,28 @@ class Board
     !find_square(start_coord).piece_capturable? && end_coord == start_coord.transform(2, 0)
   end
 
-  def move_piece(start_coord, end_coord, player)
+  def update_with_move(start_coord, end_coord, player)
     start_square = find_square(start_coord)
     end_square = find_square(end_coord)
+
+    potential_en_passant_square = find_square(end_square.piece_en_passant_coord(start_square))
+    @en_passant_square.remove_piece if potential_en_passant_square == @en_passant_square
+
+    make_move(start_square, end_square, player)
+
+    update_en_passant_square(find_square(end_coord))
+
+    end_square.promote_piece if end_square.piece_promotable?
+  end
+
+  def update_en_passant_square(end_square)
+    @en_passant_square = end_square.en_passant_capture_square? ? end_square : nil
+  end
+
+  def make_move(start_square, end_square, player)
     end_square.place_piece(start_square.piece)
     start_square.remove_piece
-    end_square.move_piece(start_coord, end_coord, player)
-    end_square.promote_piece if end_square.piece_promotable?
-    en_passant_square(end_square, player).remove_piece if @en_passant_squares.include?(en_passant_square(end_square, player))
-    @en_passant_squares << end_square if end_square.en_passant_capture_square?
-    @en_passant_squares = @en_passant_squares.select { |square| player.own_piece_at_square?(square) }
+    end_square.move_piece(start_square.coordinate, end_square.coordinate, player)
   end
 
   def valid_start_square?(coordinate, player)

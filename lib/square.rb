@@ -87,6 +87,14 @@ class Square
     @piece.move(start_coord, end_coord, player)
   end
 
+  def queeenside_castle_piece_move
+    @piece.queenside_castle_move(@coordinate)
+  end
+
+  def kingside_castle_piece_move
+    @piece.kingside_castle_move(@coordinate)
+  end
+
   def piece_capturable?
     @piece.capturable?
   end
@@ -95,16 +103,26 @@ class Square
     @piece.valid_captures(@coordinate)
   end
 
+  def piece_en_passant_coord(start_square)
+    @piece.en_passant_coord(@coordinate, start_square)
+  end
+
   def piece_promotable?
     @piece.promotable? && ((@coordinate.in_first_row? && occupied_by_black?) || (@coordinate.in_last_row? && occupied_by_white?))
   end
 
   def en_passant_capture_square?
-    @piece.moved_by_two?
+    @piece.capturable_by_en_passant?
   end
 
   def piece_valid_en_passant_capture
+    return unless en_passant_capture_square?
+
     @piece.valid_en_passant_capture(@coordinate)
+  end
+
+  def piece_can_en_passant?
+    @piece.can_en_passant?
   end
 
   def promote_piece
@@ -115,5 +133,13 @@ class Square
     else
       @piece = new_piece
     end
+  end
+
+  def occupied_by_king?
+    @piece.king?
+  end
+
+  def piece_y_move_sign
+    @piece.y_move_sign
   end
 end

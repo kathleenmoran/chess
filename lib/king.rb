@@ -4,9 +4,9 @@ require_relative 'piece'
 
 # a king piece
 class King < Piece
-  def initialize(color, first_move: true)
+  def initialize(color, unmoved: true)
     super(color)
-    @first_move = first_move
+    @unmoved = unmoved
   end
 
   def self.handles?(coordinate)
@@ -14,11 +14,27 @@ class King < Piece
   end
 
   def deep_dup
-    King.new(@color, @first_move)
+    King.new(@color, @unmoved)
+  end
+
+  def kingside_castle_move(coord)
+    return unless unmoved?
+
+    coord.transform(2, 0)
+  end
+
+  def queenside_castle_move(coord)
+    return unless unmoved?
+
+    coord.transform(-2, 0)
+  end
+
+  def king?
+    true
   end
 
   def unmoved?
-    @first_move
+    @unmoved
   end
 
   def valid_moves(start_coordinate)
@@ -35,7 +51,7 @@ class King < Piece
     false
   end
 
-  def move(start_coord, end_coord, player)
-    @first_move = false
+  def move(_start_coord, _end_coord, _player)
+    @unmoved = false
   end
 end

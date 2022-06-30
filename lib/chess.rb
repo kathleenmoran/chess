@@ -24,7 +24,7 @@ class Chess
     elsif @board.kingside_castle_move?(start_coord, end_coord)
       @board.castle_kingside(@active_player)
     else
-     @board.move_piece(start_coord, end_coord, @active_player)
+      @board.update_with_move(start_coord, end_coord, @active_player)
     end
     manage_check_warnings
     puts @board
