@@ -44,7 +44,9 @@ class Board
   end
 
   def legal_moves(coord, player, opponent)
-    reachable_squares(coord, player, opponent).select(&:piece_capturable?)
+    reachable_squares(coord, player, opponent).select do |end_square|
+      end_square.piece_capturable? && !move_results_in_check?(player, opponent, find_square(coord), end_square)
+    end
   end
 
   def reachable_squares(coord, player, opponent)
