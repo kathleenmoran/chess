@@ -43,6 +43,10 @@ class Square
     color_background(@piece.to_s, @color)
   end
 
+  def to_str
+    color_background(@piece.to_s, @color)
+  end
+
   def occupied?
     @piece.occupant?
   end

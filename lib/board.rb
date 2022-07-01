@@ -31,7 +31,16 @@ class Board
   end
 
   def to_s
-    @squares.reverse.map(&:join).join("\n")
+    string_board = @squares
+                   .each_with_index
+                   .map { |row, index| "#{index + 1} #{row.join}" }
+                   .reverse
+                   .join("\n")
+    "\n#{string_board}\n   A  B  C  D  E  F  G  H\n\n"
+  end
+
+  def row_to_s(row)
+    row.join
   end
 
   def valid_move?(start_coord, end_coord, player, opponent)
@@ -160,7 +169,8 @@ class Board
   def check?(player, opponent, kings_square = find_king_square(player))
     @squares.any? do |row|
       row.any? do |square|
-        opponent.own_piece_at_square?(square) && reachable_squares(square.coordinate, opponent, player).include?(kings_square)
+        opponent.own_piece_at_square?(square) &&
+          reachable_squares(square.coordinate, opponent, player).include?(kings_square)
       end
     end
   end
