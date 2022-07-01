@@ -4,7 +4,7 @@ require_relative 'piece'
 
 # a pawn piece
 class Pawn < Piece
-  def initialize(color, unmoved: true, moved_by_two: false, move_count: 0)
+  def initialize(color, unmoved = true, moved_by_two = false, move_count = 0)
     super(color)
     @unmoved = unmoved
     @moved_by_two = moved_by_two

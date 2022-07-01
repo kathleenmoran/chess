@@ -15,7 +15,7 @@ class Board
   end
 
   def deep_dup
-    Board.new(deep_dup_squares, @en_passant_square.deep_dup)
+    Board.new(deep_dup_squares, deep_dup_en_passant)
   end
 
   def deep_dup_squares
@@ -24,36 +24,42 @@ class Board
     end
   end
 
+  def deep_dup_en_passant
+    return if @en_passant_square.nil?
+
+    @en_passant_square.deep_dup
+  end
+
   def to_s
     @squares.reverse.map(&:join).join("\n")
   end
 
-  def valid_move?(start_coord, end_coord, player)
+  def valid_move?(start_coord, end_coord, player, opponent)
     player.own_piece_at_square?(find_square(start_coord)) &&
-      legal_moves(start_coord, player).include?(find_square(end_coord))
+      legal_moves(start_coord, player, opponent).include?(find_square(end_coord))
   end
 
   def make_board
     (0...Constants::BOARD_DIMENSION).to_a.map { |y_coord| make_row(y_coord) }
   end
 
-  def legal_moves(coord, player)
-    reachable_squares(coord, player).select(&:piece_capturable?)
+  def legal_moves(coord, player, opponent)
+    reachable_squares(coord, player, opponent).select(&:piece_capturable?)
   end
 
-  def reachable_squares(coord, player)
+  def reachable_squares(coord, player, opponent)
     start_square = find_square(coord)
     normal_move_squares(start_square, player) +
       diagonal_capture_squares(start_square, player) +
-      valid_king_castle_squares(start_square, player)
+      valid_king_castle_squares(start_square, player, opponent)
   end
 
-  def valid_king_castle_squares(start_square, player)
+  def valid_king_castle_squares(start_square, player, opponent)
     move_squares = []
     return move_squares unless start_square.occupied_by_king?
 
-    move_squares << find_square(start_square.queenside_castle_piece_move) if can_castle_queenside?(player)
-    move_squares << find_square(start_square.kingside_castle_piece_move) if can_castle_kingside?(player)
+    move_squares << find_square(start_square.queenside_castle_piece_move) if can_castle_queenside?(player, opponent)
+    move_squares << find_square(start_square.kingside_castle_piece_move) if can_castle_kingside?(player, opponent)
 
     move_squares
   end
@@ -85,8 +91,11 @@ class Board
       @en_passant_square == potential_en_passant_square
   end
 
-  def can_castle?(player, path, rook_coord)
-    return false if !find_king_square(player).unmoved? || !find_square(rook_coord).unmoved?
+  def can_castle?(player, opponent, path, rook_coord)
+    king_square = find_king_square(player)
+    return false if !king_square.unmoved? ||
+                    !find_square(rook_coord).unmoved? ||
+                    move_results_in_check?(player, opponent, king_square, find_square(path[0]))
 
     find_squares(path).all? { |square| !square.occupied? }
   end
@@ -104,12 +113,12 @@ class Board
     squares
   end
 
-  def can_castle_queenside?(player)
-    can_castle?(player, player.queenside_castle_path, player.queenside_rook_coord)
+  def can_castle_queenside?(player, opponent)
+    can_castle?(player, opponent, player.queenside_castle_path, player.queenside_rook_coord)
   end
 
-  def can_castle_kingside?(player)
-    can_castle?(player, player.kingside_castle_path, player.kingside_rook_coord)
+  def can_castle_kingside?(player, opponent)
+    can_castle?(player, opponent, player.kingside_castle_path, player.kingside_rook_coord)
   end
 
   def castle(player, rook_start_square, rook_end_square, king_start_square, king_end_square)
@@ -149,7 +158,7 @@ class Board
   def check?(player, opponent, kings_square = find_king_square(player))
     @squares.any? do |row|
       row.any? do |square|
-        opponent.own_piece_at_square?(square) && reachable_squares(square.coordinate, opponent).include?(kings_square)
+        opponent.own_piece_at_square?(square) && reachable_squares(square.coordinate, opponent, player).include?(kings_square)
       end
     end
   end
@@ -176,34 +185,39 @@ class Board
     check?(player, opponent) && no_way_out_of_check?(player, opponent)
   end
 
+  def stalemate?(player, opponent)
+    !check(player, opponent) && no_way_out_of_check?(player, opponent)
+  end
+
   def no_way_out_of_check?(player, opponent)
     @squares.all? do |row|
       row.all? do |square|
-        player.does_not_own_piece_at_square?(square) || (player.own_piece_at_square?(square) && all_moves_result_in_check?(player, opponent, square))
+        player.does_not_own_piece_at_square?(square) ||
+          !square.occupied? ||
+          (player.own_piece_at_square?(square) &&
+          all_moves_result_in_check?(player, opponent, square))
       end
     end
   end
 
   def all_moves_result_in_check?(player, opponent, start_square)
-    legal_moves(start_square.coordinate, player).all? { |end_square| move_results_in_check?(player, opponent, start_square, end_square) }
+    legal_moves(start_square.coordinate, player, opponent).all? do |end_square|
+      move_results_in_check?(player, opponent, start_square, end_square)
+    end
   end
 
   def move_results_in_check?(player, opponent, start_square, end_square)
     new_board = deep_dup
-    new_board.move_piece(start_square.coordinate, end_square.coordinate)
+    new_board.update_with_move(start_square.coordinate, end_square.coordinate, player)
     new_board.check?(player, opponent)
   end
 
-  def stalemate?(player, opponent)
-    !check?(player, opponent) && king_has_no_valid_moves?(player, opponent)
+  def select_piece(coord, player, opponent)
+    highlight_piece_and_moves(find_square(coord), legal_moves(coord, player, opponent))
   end
 
-  def select_piece(coord, player)
-    highlight_piece_and_moves(find_square(coord), legal_moves(coord, player))
-  end
-
-  def deselect_piece(coord, player)
-    remove_square_highlights([find_square(coord)] + legal_moves(coord, player))
+  def deselect_piece(coord, player, opponent)
+    remove_square_highlights([find_square(coord)] + legal_moves(coord, player, opponent))
   end
 
   def highlight_piece_and_moves(piece_square, move_squares)
@@ -267,8 +281,8 @@ class Board
     end
   end
 
-  def valid_start_square?(coordinate, player)
-    player.own_piece_at_square?(find_square(coordinate)) && !legal_moves(coordinate, player).empty?
+  def valid_start_square?(coordinate, player, opponent)
+    player.own_piece_at_square?(find_square(coordinate)) && !legal_moves(coordinate, player, opponent).empty?
   end
 
   private

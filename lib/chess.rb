@@ -39,10 +39,10 @@ class Chess
 
   def select_piece
     start_coord = @active_player.select_start_square
-    if @board.valid_start_square?(start_coord, @active_player)
-      @board.select_piece(start_coord, @active_player)
+    if @board.valid_start_square?(start_coord, @active_player, inactive_player)
+      @board.select_piece(start_coord, @active_player, inactive_player)
       puts @board
-      @board.deselect_piece(start_coord, @active_player)
+      @board.deselect_piece(start_coord, @active_player, inactive_player)
       start_coord
     else
       print_invalid_start_square_message
@@ -60,7 +60,7 @@ class Chess
 
   def select_move(start_coord)
     end_coord = @active_player.select_end_square
-    if @board.valid_move?(start_coord, end_coord, @active_player)
+    if @board.valid_move?(start_coord, end_coord, @active_player, inactive_player)
       end_coord
     else
       print_invalid_move_message

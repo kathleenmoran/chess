@@ -6,7 +6,7 @@ require_relative 'plusable'
 # a rook piece
 class Rook < Piece
   include Plusable
-  def initialize(color, unmoved: true)
+  def initialize(color, unmoved = true)
     super(color)
     @unmoved = unmoved
   end

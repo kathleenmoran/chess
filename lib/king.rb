@@ -4,7 +4,7 @@ require_relative 'piece'
 
 # a king piece
 class King < Piece
-  def initialize(color, unmoved: true)
+  def initialize(color, unmoved = true)
     super(color)
     @unmoved = unmoved
   end

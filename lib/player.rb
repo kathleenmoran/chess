@@ -32,7 +32,7 @@ class Player
   end
 
   def queenside_castle_path
-    [Coordinate.new(1, piece_row), Coordinate.new(2, piece_row), Coordinate.new(3, piece_row)]
+    [Coordinate.new(3, piece_row), Coordinate.new(2, piece_row), Coordinate.new(1, piece_row)]
   end
 
   def kingside_castle_path
