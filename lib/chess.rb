@@ -3,6 +3,7 @@
 require_relative 'board'
 require_relative 'player'
 require_relative 'colorable'
+require 'yaml'
 
 # a chess game
 class Chess
@@ -15,14 +16,18 @@ class Chess
     @player2 = Player.new(:black)
     @active_player = @player1
     @draw = false
+    @save = false
+    @quit = false
+    @file_name = nil
+    p @quit
   end
 
   def play_turn
     start_coord = select_piece
-    return if @draw
+    return if @draw || @save || @quit
 
     end_coord = select_move(start_coord)
-    return if @draw
+    return if @draw || @save || @quit
 
     @board.update_with_move(start_coord, end_coord, @active_player)
     manage_check_warnings
@@ -33,7 +38,7 @@ class Chess
     puts @board
     until @board.checkmate?(@active_player, inactive_player) || @board.stalemate?(@active_player, inactive_player)
       play_turn
-      break if @draw
+      break if @draw || @save || @quit
 
       change_active_player
       print_check_message(@active_player) if @board.check?(@active_player, inactive_player)
@@ -47,6 +52,12 @@ class Chess
       print_win_message(inactive_player)
     elsif @board.stalemate?(@active_player, inactive_player)
       print_stalemate_message
+    elsif @save
+      @save = false
+      save
+    elsif @quit
+      p @quit
+      print_quit_game_message(@active_player, inactive_player)
     else
       print_draw_message
     end
@@ -61,6 +72,10 @@ class Chess
     start_coord = @active_player.select_start_square(inactive_player)
     if start_coord == 'draw'
       @draw = true
+    elsif start_coord == 'save'
+      @save = true
+    elsif start_coord == 'quit'
+      @quit = true
     elsif @board.valid_start_square?(start_coord, @active_player, inactive_player)
       @board.select_piece(start_coord, @active_player, inactive_player)
       puts @board
@@ -84,6 +99,10 @@ class Chess
     end_coord = @active_player.select_end_square(inactive_player)
     if end_coord == 'draw'
       @draw = true
+    elsif end_coord == 'save'
+      @save = true
+    elsif start_coord == 'quit'
+      @quit = true
     elsif @board.valid_move?(start_coord, end_coord, @active_player, inactive_player)
       end_coord
     else
@@ -91,7 +110,13 @@ class Chess
       select_move(start_coord)
     end
   end
-end
 
-the_chess = Chess.new
-the_chess.play_game
+  def save
+    @save = false
+    @file_name = "game_#{Dir['*.yaml'].length}.yaml" if @file_name.nil?
+    file = File.open(@file_name, 'w')
+    file.puts YAML.dump(self)
+    file.close
+    print_save_game_message(@file_name)
+  end
+end

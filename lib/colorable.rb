@@ -21,12 +21,14 @@ module Colorable
   end
 
   def prompt_piece_selection(player)
-    puts "#{player}, enter the coordinate of the piece you would like to move (e.g., A1):"
+    puts "#{player}, enter the coordinate of the piece you would like to move (e.g., A1) or "\
+     "enter 'draw', 'save', or 'quit':"
     gets.chomp
   end
 
   def prompt_move_selection(player)
-    puts "#{player}, enter the coordinate of the square you would like the selected piece to move to (e.g., A1):"
+    puts "#{player}, enter the coordinate of the square you would like the selected piece to move to (e.g., A1) or "\
+    "enter 'draw', 'save', or 'quit':"
     gets.chomp
   end
 
@@ -57,7 +59,7 @@ module Colorable
   end
 
   def prompt_opponent_for_draw_response(opponent)
-    puts "#{opponent}, your opponent has proposed a draw. Do you accept?"
+    puts "\n#{opponent}, your opponent has proposed a draw. Do you accept?"
     gets.chomp
   end
 
@@ -75,5 +77,41 @@ module Colorable
 
   def print_check_message(player)
     puts color_text("Check on #{player.to_s.downcase}.\n", :yellow)
+  end
+
+  def prompt_play_again
+    puts 'Would you like to play again? (Y/N)'
+    gets.chomp
+  end
+
+  def print_thanks_for_playing_message
+    puts "\nThanks for playing!"
+  end
+
+  def print_welcome_to_chess_message
+    puts "\nWelcome to chess! This is a two-player, console-based game that follows "\
+    "traditional chess rules without time limitations.\n"
+  end
+
+  def prompt_select_game_type
+    puts "\nWould you like to:\n\n[1] Play a new game\n[2] Load a saved game"
+    gets.chomp
+  end
+
+  def print_save_game_message(file_name)
+    puts color_text("Your game has been successfully saved in #{file_name}.\n", :neon_green)
+  end
+
+  def print_loading_game_message(file_name)
+    puts "\nLoading game saved in #{file_name}..."
+  end
+
+  def prompt_user_to_select_file
+    puts "\nPlease select a file number:"
+    gets.chomp
+  end
+
+  def print_quit_game_message(quitter, winner)
+    puts color_text("#{quitter} quit. #{winner} wins by forfeiture!\n", :neon_green)
   end
 end

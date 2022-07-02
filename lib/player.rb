@@ -68,12 +68,12 @@ class Player
   end
 
   def select_square(opponent, &block)
-    alpha_coord = yield(opponent)
+    alpha_coord = yield(opponent).downcase
     if valid_alpha_coord?(alpha_coord)
       alpha_to_numeric_coord(alpha_coord)
-    elsif alpha_coord.downcase == 'draw' && opponent_draw_response(opponent) == 'draw'
-      'draw'
-    elsif alpha_coord.downcase == 'draw'
+    elsif alpha_coord == 'save' || alpha_coord == 'quit' || (alpha_coord == 'draw' && opponent_draw_response(opponent) == 'draw')
+      alpha_coord
+    elsif alpha_coord == 'draw'
       select_square(opponent, &block)
     else
       print_invalid_coord_message(alpha_coord)
