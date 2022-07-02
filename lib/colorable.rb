@@ -51,4 +51,29 @@ module Colorable
   def print_invalid_promotion_message
     puts color_text("That is not a valid input for piece promotion.\n", :red)
   end
+
+  def print_invalid_response_message
+    puts color_text("That is not a valid response.\n", :red)
+  end
+
+  def prompt_opponent_for_draw_response(opponent)
+    puts "#{opponent}, your opponent has proposed a draw. Do you accept?"
+    gets.chomp
+  end
+
+  def print_win_message(winner)
+    puts color_text("Checkmate - #{winner} won!", :neon_green)
+  end
+
+  def print_draw_message
+    puts color_text("The game has ended in a draw.\n", :yellow)
+  end
+
+  def print_stalemate_message
+    puts color_text("Stalemate - The game has ended in a draw.\n", :yellow)
+  end
+
+  def print_check_message(player)
+    puts color_text("Check on #{player.to_s.downcase}.\n", :yellow)
+  end
 end

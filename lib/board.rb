@@ -198,7 +198,7 @@ class Board
   end
 
   def stalemate?(player, opponent)
-    !check(player, opponent) && no_way_out_of_check?(player, opponent)
+    !check?(player, opponent) && no_way_out_of_check?(player, opponent)
   end
 
   def no_way_out_of_check?(player, opponent)

@@ -14,11 +14,16 @@ class Chess
     @player1 = Player.new(:white)
     @player2 = Player.new(:black)
     @active_player = @player1
+    @draw = false
   end
 
   def play_turn
     start_coord = select_piece
+    return if @draw
+
     end_coord = select_move(start_coord)
+    return if @draw
+
     @board.update_with_move(start_coord, end_coord, @active_player)
     manage_check_warnings
     puts @board
@@ -26,9 +31,24 @@ class Chess
 
   def play_game
     puts @board
-    loop do
+    until @board.checkmate?(@active_player, inactive_player) || @board.stalemate?(@active_player, inactive_player)
       play_turn
+      break if @draw
+
       change_active_player
+      print_check_message(@active_player) if @board.check?(@active_player, inactive_player)
+    end
+    puts @board
+    print_end_game_message
+  end
+
+  def print_end_game_message
+    if @board.checkmate?(@active_player, inactive_player)
+      print_win_message(inactive_player)
+    elsif @board.stalemate?(@active_player, inactive_player)
+      print_stalemate_message
+    else
+      print_draw_message
     end
   end
 
@@ -38,8 +58,10 @@ class Chess
   end
 
   def select_piece
-    start_coord = @active_player.select_start_square
-    if @board.valid_start_square?(start_coord, @active_player, inactive_player)
+    start_coord = @active_player.select_start_square(inactive_player)
+    if start_coord == 'draw'
+      @draw = true
+    elsif @board.valid_start_square?(start_coord, @active_player, inactive_player)
       @board.select_piece(start_coord, @active_player, inactive_player)
       puts @board
       @board.deselect_piece(start_coord, @active_player, inactive_player)
@@ -59,8 +81,10 @@ class Chess
   end
 
   def select_move(start_coord)
-    end_coord = @active_player.select_end_square
-    if @board.valid_move?(start_coord, end_coord, @active_player, inactive_player)
+    end_coord = @active_player.select_end_square(inactive_player)
+    if end_coord == 'draw'
+      @draw = true
+    elsif @board.valid_move?(start_coord, end_coord, @active_player, inactive_player)
       end_coord
     else
       print_invalid_move_message

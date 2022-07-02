@@ -59,21 +59,37 @@ class Player
     (white? && square.occupied_by_black?) || (black? && square.occupied_by_white?)
   end
 
-  def select_start_square
-    select_square { prompt_piece_selection(self) }
+  def select_start_square(opponent)
+    select_square(opponent) { prompt_piece_selection(self) }
   end
 
-  def select_end_square
-    select_square { prompt_move_selection(self) }
+  def select_end_square(opponent)
+    select_square(opponent) { prompt_move_selection(self) }
   end
 
-  def select_square(&block)
-    alpha_coord = yield
+  def select_square(opponent, &block)
+    alpha_coord = yield(opponent)
     if valid_alpha_coord?(alpha_coord)
       alpha_to_numeric_coord(alpha_coord)
+    elsif alpha_coord.downcase == 'draw' && opponent_draw_response(opponent) == 'draw'
+      'draw'
+    elsif alpha_coord.downcase == 'draw'
+      select_square(opponent, &block)
     else
       print_invalid_coord_message(alpha_coord)
-      select_square(&block)
+      select_square(opponent, &block)
+    end
+  end
+
+  def opponent_draw_response(opponent)
+    opponent_response = prompt_opponent_for_draw_response(opponent).downcase
+    if %w[y yes].include?(opponent_response)
+      'draw'
+    elsif %w[n no].include?(opponent_response)
+      'no draw'
+    else
+      print_invalid_response_message
+      opponent_draw_response(opponent)
     end
   end
 
