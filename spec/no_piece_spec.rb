@@ -62,4 +62,25 @@ describe NoPiece do
       end
     end
   end
+
+  describe '#deep_dup' do
+    it 'calls new on the described class' do
+      expect(described_class)
+        .to receive(:new)
+        .with(no_piece.instance_variable_get(:@color))
+      no_piece.deep_dup
+    end
+
+    it 'returns an object that is not equal to the original' do
+      expect(no_piece.deep_dup).not_to eq(no_piece)
+    end
+
+    it 'returns a no piece' do
+      expect(no_piece.deep_dup).to be_kind_of(described_class)
+    end
+
+    it 'is has a color that is nil' do
+      expect(no_piece.deep_dup.instance_variable_get(:@color)).to be_nil
+    end
+  end
 end

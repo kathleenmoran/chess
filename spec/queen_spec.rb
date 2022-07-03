@@ -4,7 +4,8 @@ require_relative '../lib/queen'
 require_relative '../lib/coordinate'
 
 describe Queen do
-  subject(:queen) { described_class.new(:black) }
+  subject(:black_queen) { described_class.new(:black) }
+  subject(:white_queen) { described_class.new(:white) }
 
   let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a4) { instance_double(Coordinate, x: 0, y: 3) }
@@ -84,7 +85,7 @@ describe Queen do
     end
 
     it 'returns all the valid moves for a queen at position D4' do
-      expect(queen.valid_moves(d4)).to contain_exactly(
+      expect(black_queen.valid_moves(d4)).to contain_exactly(
         [c3, b2, a1], [e5, f6, g7, h8], [c5, b6, a7], [e3, f2, g1],
         [d5, d6, d7, d8], [d3, d2, d1], [c4, b4, a4], [e4, f4, g4, h4]
       )
@@ -115,19 +116,19 @@ describe Queen do
 
   describe '#valid_captures' do
     it 'returns an empty array' do
-      expect(queen.valid_captures(a1)).to be_empty
+      expect(black_queen.valid_captures(a1)).to be_empty
     end
   end
 
   describe '#valid_en_passant_capture' do
     it 'returns nil' do
-      expect(queen.valid_en_passant_capture(a1)).to be_nil
+      expect(black_queen.valid_en_passant_capture(a1)).to be_nil
     end
   end
 
   describe '#occupant?' do
     it 'is an occupant' do
-      expect(queen).to be_occupant
+      expect(black_queen).to be_occupant
     end
   end
 
@@ -141,6 +142,50 @@ describe Queen do
     context "when the given string is not 'queen'" do
       it 'does not handle the promotion' do
         expect(described_class.handles_promotion?('knight')).to eq(false)
+      end
+    end
+  end
+
+  describe '#deep_dup' do
+    context 'when the queen being duplicated is black' do
+      it 'calls new on the described class' do
+        expect(described_class)
+          .to receive(:new)
+          .with(black_queen.instance_variable_get(:@color))
+        black_queen.deep_dup
+      end
+
+      it 'returns an object that is not equal to the original' do
+        expect(black_queen.deep_dup).not_to eq(black_queen)
+      end
+
+      it 'returns a queen' do
+        expect(black_queen.deep_dup).to be_kind_of(described_class)
+      end
+
+      it 'is black' do
+        expect(black_queen.deep_dup.instance_variable_get(:@color)).to eq(:black)
+      end
+    end
+
+    context 'when the queen being duplicated is white' do
+      it 'calls new on the described class' do
+        expect(described_class)
+          .to receive(:new)
+          .with(white_queen.instance_variable_get(:@color))
+        white_queen.deep_dup
+      end
+
+      it 'returns an object that is not equal to the original' do
+        expect(white_queen.deep_dup).not_to eq(white_queen)
+      end
+
+      it 'returns a queen' do
+        expect(white_queen.deep_dup).to be_kind_of(described_class)
+      end
+
+      it 'is white' do
+        expect(white_queen.deep_dup.instance_variable_get(:@color)).to eq(:white)
       end
     end
   end

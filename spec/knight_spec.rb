@@ -4,7 +4,8 @@ require_relative '../lib/knight'
 require_relative '../lib/coordinate'
 
 describe Knight do
-  subject(:knight) { described_class.new(:black) }
+  subject(:black_knight) { described_class.new(:black) }
+  subject(:white_knight) { described_class.new(:white) }
 
   let(:a8) { instance_double(Coordinate, x: 0, y: 7) }
 
@@ -47,7 +48,7 @@ describe Knight do
       end
 
       it 'returns an array with all the moves a knight can make from D4' do
-        expect(knight.valid_moves(d4)).to contain_exactly([b3], [b5], [c2], [c6], [e2], [e6], [f3], [f5])
+        expect(black_knight.valid_moves(d4)).to contain_exactly([b3], [b5], [c2], [c6], [e2], [e6], [f3], [f5])
       end
     end
 
@@ -65,7 +66,7 @@ describe Knight do
       end
 
       it 'returns an array with all the moves a knight can make from A8' do
-        expect(knight.valid_moves(a8)).to contain_exactly([b6], [c7])
+        expect(black_knight.valid_moves(a8)).to contain_exactly([b6], [c7])
       end
     end
   end
@@ -94,19 +95,19 @@ describe Knight do
 
   describe '#valid_captures' do
     it 'returns an empty array' do
-      expect(knight.valid_captures(a8)).to be_empty
+      expect(black_knight.valid_captures(a8)).to be_empty
     end
   end
 
   describe '#valid_en_passant_capture' do
     it 'returns nil' do
-      expect(knight.valid_en_passant_capture(a8)).to be_nil
+      expect(black_knight.valid_en_passant_capture(a8)).to be_nil
     end
   end
 
   describe '#occupant?' do
     it 'is an occupant' do
-      expect(knight).to be_occupant
+      expect(black_knight).to be_occupant
     end
   end
 
@@ -120,6 +121,50 @@ describe Knight do
     context "when the given string is not 'knight'" do
       it 'does not handle the promotion' do
         expect(described_class.handles_promotion?('queen')).to eq(false)
+      end
+    end
+  end
+
+  describe '#deep_dup' do
+    context 'when the knight being duplicated is black' do
+      it 'calls new on the described class' do
+        expect(described_class)
+          .to receive(:new)
+          .with(black_knight.instance_variable_get(:@color))
+        black_knight.deep_dup
+      end
+
+      it 'returns an object that is not equal to the original' do
+        expect(black_knight.deep_dup).not_to eq(black_knight)
+      end
+
+      it 'returns a knight' do
+        expect(black_knight.deep_dup).to be_kind_of(described_class)
+      end
+
+      it 'is black' do
+        expect(black_knight.deep_dup.instance_variable_get(:@color)).to eq(:black)
+      end
+    end
+
+    context 'when the knight being duplicated is white' do
+      it 'calls new on the described class' do
+        expect(described_class)
+          .to receive(:new)
+          .with(white_knight.instance_variable_get(:@color))
+        white_knight.deep_dup
+      end
+
+      it 'returns an object that is not equal to the original' do
+        expect(white_knight.deep_dup).not_to eq(white_knight)
+      end
+
+      it 'returns a knight' do
+        expect(white_knight.deep_dup).to be_kind_of(described_class)
+      end
+
+      it 'is white' do
+        expect(white_knight.deep_dup.instance_variable_get(:@color)).to eq(:white)
       end
     end
   end

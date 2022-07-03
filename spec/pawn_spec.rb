@@ -6,11 +6,12 @@ require_relative '../lib/coordinate'
 describe Pawn do
   let(:a2) { instance_double(Coordinate, x: 0, y: 1) }
   let(:a3) { instance_double(Coordinate, x: 0, y: 2) }
-  subject(:unmoved_pawn) { described_class.new(:black) }
+  subject(:black_unmoved_pawn) { described_class.new(:black) }
+  subject(:white_moved_pawn) { described_class.new(:white, false, true, 1) }
 
   describe '#valid_moves' do
     context "when the pawn hasn't been moved yet" do
-      subject(:unmoved_pawn) { described_class.new(:black) }
+      subject(:black_unmoved_pawn) { described_class.new(:black) }
       let(:start_coordinate) { instance_double(Coordinate, x: 0, y: 1) }
       let(:valid_move1) { instance_double(Coordinate, x: 0, y: 2) }
       let(:valid_move2) { instance_double(Coordinate, x: 0, y: 3) }
@@ -22,7 +23,7 @@ describe Pawn do
       end
 
       it 'returns two valid moves (one up and two up)' do
-        expect(unmoved_pawn.valid_moves(start_coordinate)).to contain_exactly([valid_move1, valid_move2])
+        expect(black_unmoved_pawn.valid_moves(start_coordinate)).to contain_exactly([valid_move1, valid_move2])
       end
     end
 
@@ -120,7 +121,7 @@ describe Pawn do
 
   describe '#occupant?' do
     it 'is an occupant' do
-      expect(unmoved_pawn).to be_occupant
+      expect(black_unmoved_pawn).to be_occupant
     end
   end
 
@@ -128,6 +129,84 @@ describe Pawn do
     context 'when given any string' do
       it 'does not handle the promotion' do
         expect(described_class.handles_promotion?('knight')).to eq(false)
+      end
+    end
+  end
+
+  describe '#deep_dup' do
+    context 'when the pawn being duplicated is black and has not been moved' do
+      it 'calls new on the described class' do
+        expect(described_class)
+          .to receive(:new)
+          .with(
+            black_unmoved_pawn.instance_variable_get(:@color),
+            black_unmoved_pawn.instance_variable_get(:@unmoved),
+            black_unmoved_pawn.instance_variable_get(:@moved_by_two),
+            black_unmoved_pawn.instance_variable_get(:@move_count)
+          )
+        black_unmoved_pawn.deep_dup
+      end
+
+      it 'returns an object that is not equal to the original' do
+        expect(black_unmoved_pawn.deep_dup).not_to eq(black_unmoved_pawn)
+      end
+
+      it 'returns a pawn' do
+        expect(black_unmoved_pawn.deep_dup).to be_kind_of(described_class)
+      end
+
+      it 'is black' do
+        expect(black_unmoved_pawn.deep_dup.instance_variable_get(:@color)).to eq(:black)
+      end
+
+      it 'has not been moved' do
+        expect(black_unmoved_pawn.deep_dup.instance_variable_get(:@unmoved)).to eq(true)
+      end
+
+      it 'has been moved by two' do
+        expect(black_unmoved_pawn.deep_dup.instance_variable_get(:@moved_by_two)).to eq(false)
+      end
+
+      it 'has made one move' do
+        expect(black_unmoved_pawn.deep_dup.instance_variable_get(:@move_count)).to eq(0)
+      end
+    end
+
+    context 'when the king being duplicated is white and has been moved once, by two' do
+      it 'calls new on the described class' do
+        expect(described_class)
+          .to receive(:new)
+          .with(
+            white_moved_pawn.instance_variable_get(:@color),
+            white_moved_pawn.instance_variable_get(:@unmoved),
+            white_moved_pawn.instance_variable_get(:@moved_by_two),
+            white_moved_pawn.instance_variable_get(:@move_count)
+          )
+        white_moved_pawn.deep_dup
+      end
+
+      it 'returns an object that is not equal to the original' do
+        expect(white_moved_pawn.deep_dup).not_to eq(white_moved_pawn)
+      end
+
+      it 'returns a pawn' do
+        expect(white_moved_pawn.deep_dup).to be_kind_of(described_class)
+      end
+
+      it 'is white' do
+        expect(white_moved_pawn.deep_dup.instance_variable_get(:@color)).to eq(:white)
+      end
+
+      it 'has been moved' do
+        expect(white_moved_pawn.deep_dup.instance_variable_get(:@unmoved)).to eq(false)
+      end
+
+      it 'has been moved by two' do
+        expect(white_moved_pawn.deep_dup.instance_variable_get(:@moved_by_two)).to eq(true)
+      end
+
+      it 'has made one move' do
+        expect(white_moved_pawn.deep_dup.instance_variable_get(:@move_count)).to eq(1)
       end
     end
   end

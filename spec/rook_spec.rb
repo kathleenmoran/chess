@@ -4,7 +4,8 @@ require_relative '../lib/rook'
 require_relative '../lib/coordinate'
 
 describe Rook do
-  subject(:rook) { described_class.new(:black) }
+  subject(:black_moved_rook) { described_class.new(:black, false) }
+  subject(:white_unmoved_rook) { described_class.new(:white) }
 
   let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a4) { instance_double(Coordinate, x: 0, y: 3) }
@@ -50,7 +51,7 @@ describe Rook do
       end
 
       it 'returns an array of valid moves from D4' do
-        expect(rook.valid_moves(d4)).to contain_exactly(
+        expect(black_moved_rook.valid_moves(d4)).to contain_exactly(
           [d5, d6, d7, d8], [d3, d2, d1], [c4, b4, a4], [e4, f4, g4, h4]
         )
       end
@@ -62,7 +63,7 @@ describe Rook do
       end
 
       it 'returns an array of valid moves from B7' do
-        expect(rook.valid_moves(b7)).to contain_exactly(
+        expect(black_moved_rook.valid_moves(b7)).to contain_exactly(
           [b8], [b6, b5, b4, b3, b2, b1], [a7], [c7, d7, e7, f7, g7, h7]
         )
       end
@@ -93,19 +94,19 @@ describe Rook do
 
   describe '#valid_captures' do
     it 'returns an empty array' do
-      expect(rook.valid_captures(a1)).to be_empty
+      expect(white_unmoved_rook.valid_captures(a1)).to be_empty
     end
   end
 
   describe '#valid_en_passant_capture' do
     it 'returns nil' do
-      expect(rook.valid_en_passant_capture(a1)).to be_nil
+      expect(white_unmoved_rook.valid_en_passant_capture(a1)).to be_nil
     end
   end
 
   describe '#occupant?' do
     it 'is an occupant' do
-      expect(rook).to be_occupant
+      expect(black_moved_rook).to be_occupant
     end
   end
 
@@ -119,6 +120,58 @@ describe Rook do
     context "when the given string is not 'rook'" do
       it 'does not handle the promotion' do
         expect(described_class.handles_promotion?('queen')).to eq(false)
+      end
+    end
+  end
+
+  describe '#deep_dup' do
+    context 'when the rook being duplicated is black and has been moved' do
+      it 'calls new on the described class' do
+        expect(described_class)
+          .to receive(:new)
+          .with(black_moved_rook.instance_variable_get(:@color), black_moved_rook.instance_variable_get(:@unmoved))
+        black_moved_rook.deep_dup
+      end
+
+      it 'returns an object that is not equal to the original' do
+        expect(black_moved_rook.deep_dup).not_to eq(black_moved_rook)
+      end
+
+      it 'returns a king' do
+        expect(black_moved_rook.deep_dup).to be_kind_of(described_class)
+      end
+
+      it 'is black' do
+        expect(black_moved_rook.deep_dup.instance_variable_get(:@color)).to eq(:black)
+      end
+
+      it 'has been moved' do
+        expect(black_moved_rook.deep_dup.instance_variable_get(:@unmoved)).to eq(false)
+      end
+    end
+
+    context 'when the king being duplicated is white and has not been moved' do
+      it 'calls new on the described class' do
+        expect(described_class)
+          .to receive(:new)
+          .with(white_unmoved_rook.instance_variable_get(:@color), white_unmoved_rook.instance_variable_get(:@unmoved))
+        white_unmoved_rook.deep_dup
+      end
+
+      it 'returns an object that is not equal to the original' do
+        expect(white_unmoved_rook.deep_dup).not_to eq(white_unmoved_rook)
+      end
+
+      it 'returns a king' do
+        expect(white_unmoved_rook.deep_dup).to be_kind_of(described_class)
+      end
+
+      it 'is white' do
+        expect(white_unmoved_rook.deep_dup.instance_variable_get(:@color)).to eq(:white)
+      end
+
+      it 'has not been moved' do
+        expect(white_unmoved_rook.deep_dup.instance_variable_get(:@unmoved)).to eq(true)
       end
     end
   end

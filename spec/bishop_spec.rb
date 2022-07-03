@@ -4,7 +4,8 @@ require_relative '../lib/bishop'
 require_relative '../lib/coordinate'
 
 describe Bishop do
-  subject(:bishop) { described_class.new(:black) }
+  subject(:black_bishop) { described_class.new(:black) }
+  subject(:white_bishop) { described_class.new(:white) }
 
   let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a7) { instance_double(Coordinate, x: 0, y: 6) }
@@ -94,7 +95,7 @@ describe Bishop do
       end
 
       it 'returns an array with all the moves a diagonal piece can make from D4' do
-        expect(bishop.valid_moves(d4)).to contain_exactly([c3, b2, a1], [e5, f6, g7, h8], [c5, b6, a7], [e3, f2, g1])
+        expect(black_bishop.valid_moves(d4)).to contain_exactly([c3, b2, a1], [e5, f6, g7, h8], [c5, b6, a7], [e3, f2, g1])
       end
     end
 
@@ -131,7 +132,7 @@ describe Bishop do
       end
 
       it 'returns an array with all the moves a diagonal piece can make from A7' do
-        expect(bishop.valid_moves(a7)).to contain_exactly([], [b8], [b6, c5, d4, e3, f2, g1], [])
+        expect(black_bishop.valid_moves(a7)).to contain_exactly([], [b8], [b6, c5, d4, e3, f2, g1], [])
       end
     end
 
@@ -170,7 +171,7 @@ describe Bishop do
       end
 
       it 'returns an array with all the moves a diagonal piece can make from G2' do
-        expect(bishop.valid_moves(g2)).to contain_exactly([f1], [h3], [h1], [f3, e4, d5, c6, b7, a8])
+        expect(black_bishop.valid_moves(g2)).to contain_exactly([f1], [h3], [h1], [f3, e4, d5, c6, b7, a8])
       end
     end
   end
@@ -199,19 +200,19 @@ describe Bishop do
 
   describe '#valid_captures' do
     it 'returns an empty array' do
-      expect(bishop.valid_captures(f2)).to be_empty
+      expect(black_bishop.valid_captures(f2)).to be_empty
     end
   end
 
   describe '#valid_en_passant_capture' do
     it 'returns nil' do
-      expect(bishop.valid_en_passant_capture(f2)).to be_nil
+      expect(black_bishop.valid_en_passant_capture(f2)).to be_nil
     end
   end
 
   describe '#occupant?' do
     it 'is an occupant' do
-      expect(bishop).to be_occupant
+      expect(black_bishop).to be_occupant
     end
   end
 
@@ -225,6 +226,46 @@ describe Bishop do
     context "when the given string is not 'bishop'" do
       it 'does not handle the promotion' do
         expect(described_class.handles_promotion?('queen')).to eq(false)
+      end
+    end
+  end
+
+  describe '#deep_dup' do
+    context 'when the bishop being duplicated is black' do
+      it 'calls new on the described class' do
+        expect(described_class).to receive(:new).with(black_bishop.instance_variable_get(:@color))
+        black_bishop.deep_dup
+      end
+
+      it 'returns an object that is not equal to the original' do
+        expect(black_bishop.deep_dup).not_to eq(white_bishop)
+      end
+
+      it 'returns a bishop' do
+        expect(black_bishop.deep_dup).to be_kind_of(described_class)
+      end
+
+      it 'is black' do
+        expect(black_bishop.deep_dup.instance_variable_get(:@color)).to eq(:black)
+      end
+    end
+
+    context 'when the bishop being duplicated is white' do
+      it 'calls new on the described class' do
+        expect(described_class).to receive(:new).with(white_bishop.instance_variable_get(:@color))
+        white_bishop.deep_dup
+      end
+
+      it 'returns an object that is not equal to the original' do
+        expect(white_bishop.deep_dup).not_to eq(white_bishop)
+      end
+
+      it 'returns a bishop' do
+        expect(white_bishop.deep_dup).to be_kind_of(described_class)
+      end
+
+      it 'is white' do
+        expect(white_bishop.deep_dup.instance_variable_get(:@color)).to eq(:white)
       end
     end
   end
