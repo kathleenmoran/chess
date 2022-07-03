@@ -93,8 +93,8 @@ describe Knight do
   end
 
   describe '#valid_captures' do
-    it 'returns nil' do
-      expect(knight.valid_captures(a8)).to be_nil
+    it 'returns an empty array' do
+      expect(knight.valid_captures(a8)).to be_empty
     end
   end
 
