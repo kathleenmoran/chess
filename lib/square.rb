@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'colorable'
+require_relative 'displayable'
 require_relative 'piece'
 require_relative 'bishop'
 require_relative 'king'
@@ -12,7 +12,7 @@ require_relative 'no_piece'
 
 # a square on a chessboard
 class Square
-  include Colorable
+  include Displayable
   attr_reader :coordinate
   attr_reader :piece
 

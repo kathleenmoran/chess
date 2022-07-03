@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'colorable'
+require_relative 'displayable'
 require_relative 'constants'
 
 # a chess piece
 class Piece
-  include Colorable
+  include Displayable
   attr_reader :color
 
   def initialize(color = nil)

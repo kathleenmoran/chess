@@ -2,12 +2,12 @@
 
 require_relative 'board'
 require_relative 'player'
-require_relative 'colorable'
+require_relative 'displayable'
 require 'yaml'
 
 # a chess game
 class Chess
-  include Colorable
+  include Displayable
   attr_reader :board
 
   def initialize
@@ -55,7 +55,6 @@ class Chess
       @save = false
       save
     elsif @quit
-      p @quit
       print_quit_game_message(@active_player, inactive_player)
     else
       print_draw_message
@@ -100,7 +99,7 @@ class Chess
       @draw = true
     elsif end_coord == 'save'
       @save = true
-    elsif start_coord == 'quit'
+    elsif end_coord == 'quit'
       @quit = true
     elsif @board.valid_move?(start_coord, end_coord, @active_player, inactive_player)
       end_coord

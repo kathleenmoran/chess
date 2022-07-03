@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require_relative 'chess'
-require_relative 'colorable'
+require_relative 'displayable'
 
 # a controller to manage chess games
 class Controller
-  include Colorable
+  include Displayable
   def play_game
     print_welcome_to_chess_message
     case prompt_select_game_type

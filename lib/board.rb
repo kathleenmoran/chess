@@ -2,13 +2,11 @@
 
 require_relative 'square'
 require_relative 'constants'
-require_relative 'coordinate'
-require_relative 'player'
-require_relative 'colorable'
+require_relative 'displayable'
 
 # a chessboard
 class Board
-  include Colorable
+  include Displayable
   def initialize(squares = make_board, en_passant_square = nil)
     @squares = squares
     @en_passant_square = en_passant_square

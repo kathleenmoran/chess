@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require_relative 'coordinate'
-require_relative 'colorable'
+require_relative 'displayable'
 
 # a player of a chess game
 class Player
-  include Colorable
+  include Displayable
   attr_reader :color
   def initialize(color)
     @color = color
