@@ -92,8 +92,8 @@ describe Rook do
   end
 
   describe '#valid_captures' do
-    it 'returns nil' do
-      expect(rook.valid_captures(a1)).to be_nil
+    it 'returns an empty array' do
+      expect(rook.valid_captures(a1)).to be_empty
     end
   end
 
