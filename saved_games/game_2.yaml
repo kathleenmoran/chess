@@ -64,11 +64,8 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 0
         y: 1
-      piece: !ruby/object:Pawn
-        color: :white
-        unmoved: true
-        moved_by_two: false
-        move_count: 0
+      piece: !ruby/object:NoPiece
+        color:
       color: :light_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -200,8 +197,11 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 0
         y: 3
-      piece: !ruby/object:NoPiece
-        color:
+      piece: !ruby/object:Pawn
+        color: :white
+        unmoved: false
+        moved_by_two: true
+        move_count: 1
       color: :light_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -301,12 +301,15 @@ board: !ruby/object:Board
       piece: !ruby/object:NoPiece
         color:
       color: :dark_green
-    - !ruby/object:Square
+    - &1 !ruby/object:Square
       coordinate: !ruby/object:Coordinate
         x: 7
         y: 4
-      piece: !ruby/object:NoPiece
-        color:
+      piece: !ruby/object:Pawn
+        color: :black
+        unmoved: false
+        moved_by_two: true
+        move_count: 1
       color: :light_green
   - - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -438,11 +441,8 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 7
         y: 6
-      piece: !ruby/object:Pawn
-        color: :black
-        unmoved: true
-        moved_by_two: false
-        move_count: 0
+      piece: !ruby/object:NoPiece
+        color:
       color: :light_green
   - - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -503,13 +503,13 @@ board: !ruby/object:Board
         color: :black
         unmoved: true
       color: :dark_green
-  en_passant_square:
-player1: &1 !ruby/object:Player
+  en_passant_square: *1
+player1: &2 !ruby/object:Player
   color: :white
 player2: !ruby/object:Player
   color: :black
-active_player: *1
+active_player: *2
 draw: false
 save: false
 quit: false
-file_name: game_3.yaml
+file_name: saved_games/game_2.yaml

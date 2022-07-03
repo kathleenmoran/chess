@@ -64,11 +64,8 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 0
         y: 1
-      piece: !ruby/object:Pawn
-        color: :white
-        unmoved: true
-        moved_by_two: false
-        move_count: 0
+      piece: !ruby/object:NoPiece
+        color:
       color: :light_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -263,8 +260,11 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 1
         y: 4
-      piece: !ruby/object:NoPiece
-        color:
+      piece: !ruby/object:Pawn
+        color: :white
+        unmoved: false
+        moved_by_two: true
+        move_count: 2
       color: :light_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -378,11 +378,8 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 1
         y: 6
-      piece: !ruby/object:Pawn
-        color: :black
-        unmoved: true
-        moved_by_two: false
-        move_count: 0
+      piece: !ruby/object:NoPiece
+        color:
       color: :light_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -504,11 +501,12 @@ board: !ruby/object:Board
         unmoved: true
       color: :dark_green
   en_passant_square:
-player1: &1 !ruby/object:Player
+player1: !ruby/object:Player
   color: :white
-player2: !ruby/object:Player
+player2: &1 !ruby/object:Player
   color: :black
 active_player: *1
 draw: false
 save: false
-file_name: game_1.yaml
+quit: false
+file_name: saved_games/game_1.yaml

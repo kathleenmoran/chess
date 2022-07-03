@@ -19,7 +19,6 @@ class Chess
     @save = false
     @quit = false
     @file_name = nil
-    p @quit
   end
 
   def play_turn
@@ -113,10 +112,10 @@ class Chess
 
   def save
     @save = false
-    @file_name = "game_#{Dir['*.yaml'].length}.yaml" if @file_name.nil?
+    @file_name = "saved_games/game_#{Dir['saved_games/*.yaml'].length}.yaml" if @file_name.nil?
     file = File.open(@file_name, 'w')
     file.puts YAML.dump(self)
     file.close
-    print_save_game_message(@file_name)
+    print_save_game_message(@file_name.split('/')[-1])
   end
 end

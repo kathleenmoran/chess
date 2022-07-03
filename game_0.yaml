@@ -510,5 +510,6 @@ player2: !ruby/object:Player
   color: :black
 active_player: *1
 draw: false
-save: true
+save: false
+quit: false
 file_name: game_0.yaml

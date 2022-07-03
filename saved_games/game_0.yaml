@@ -5,16 +5,15 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 0
         y: 0
-      piece: !ruby/object:Rook
-        color: :white
-        unmoved: true
+      piece: !ruby/object:NoPiece
+        color:
       color: :dark_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
         x: 1
         y: 0
-      piece: !ruby/object:Knight
-        color: :white
+      piece: !ruby/object:NoPiece
+        color:
       color: :light_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -141,136 +140,134 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 0
         y: 2
-      piece: !ruby/object:NoPiece
-        color:
-      color: :dark_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 1
-        y: 2
-      piece: !ruby/object:NoPiece
-        color:
-      color: :light_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 2
-        y: 2
-      piece: !ruby/object:NoPiece
-        color:
-      color: :dark_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 3
-        y: 2
-      piece: !ruby/object:NoPiece
-        color:
-      color: :light_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 4
-        y: 2
-      piece: !ruby/object:NoPiece
-        color:
-      color: :dark_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 5
-        y: 2
-      piece: !ruby/object:NoPiece
-        color:
-      color: :light_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 6
-        y: 2
-      piece: !ruby/object:NoPiece
-        color:
-      color: :dark_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 7
-        y: 2
-      piece: !ruby/object:NoPiece
-        color:
-      color: :light_green
-  - - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 0
-        y: 3
-      piece: !ruby/object:NoPiece
-        color:
-      color: :light_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 1
-        y: 3
-      piece: !ruby/object:NoPiece
-        color:
-      color: :dark_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 2
-        y: 3
-      piece: !ruby/object:NoPiece
-        color:
-      color: :light_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 3
-        y: 3
-      piece: !ruby/object:NoPiece
-        color:
-      color: :dark_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 4
-        y: 3
-      piece: !ruby/object:NoPiece
-        color:
-      color: :light_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 5
-        y: 3
-      piece: !ruby/object:NoPiece
-        color:
-      color: :dark_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 6
-        y: 3
-      piece: !ruby/object:NoPiece
-        color:
-      color: :light_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 7
-        y: 3
-      piece: !ruby/object:NoPiece
-        color:
-      color: :dark_green
-  - - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 0
-        y: 4
-      piece: !ruby/object:Pawn
+      piece: !ruby/object:Rook
         color: :white
         unmoved: false
-        moved_by_two: true
-        move_count: 2
       color: :dark_green
-    - &1 !ruby/object:Square
+    - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
         x: 1
-        y: 4
+        y: 2
+      piece: !ruby/object:NoPiece
+        color:
+      color: :light_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 2
+        y: 2
+      piece: !ruby/object:NoPiece
+        color:
+      color: :dark_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 3
+        y: 2
+      piece: !ruby/object:NoPiece
+        color:
+      color: :light_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 4
+        y: 2
+      piece: !ruby/object:NoPiece
+        color:
+      color: :dark_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 5
+        y: 2
+      piece: !ruby/object:NoPiece
+        color:
+      color: :light_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 6
+        y: 2
+      piece: !ruby/object:NoPiece
+        color:
+      color: :dark_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 7
+        y: 2
+      piece: !ruby/object:NoPiece
+        color:
+      color: :light_green
+  - - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 0
+        y: 3
       piece: !ruby/object:Pawn
-        color: :black
+        color: :white
         unmoved: false
         moved_by_two: true
         move_count: 1
       color: :light_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
+        x: 1
+        y: 3
+      piece: !ruby/object:NoPiece
+        color:
+      color: :dark_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 2
+        y: 3
+      piece: !ruby/object:NoPiece
+        color:
+      color: :light_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 3
+        y: 3
+      piece: !ruby/object:NoPiece
+        color:
+      color: :dark_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 4
+        y: 3
+      piece: !ruby/object:NoPiece
+        color:
+      color: :light_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 5
+        y: 3
+      piece: !ruby/object:NoPiece
+        color:
+      color: :dark_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 6
+        y: 3
+      piece: !ruby/object:NoPiece
+        color:
+      color: :light_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 7
+        y: 3
+      piece: !ruby/object:NoPiece
+        color:
+      color: :dark_green
+  - - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 0
+        y: 4
+      piece: !ruby/object:NoPiece
+        color:
+      color: :dark_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 1
+        y: 4
+      piece: !ruby/object:NoPiece
+        color:
+      color: :light_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
         x: 2
         y: 4
       piece: !ruby/object:NoPiece
@@ -301,8 +298,11 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 6
         y: 4
-      piece: !ruby/object:NoPiece
-        color:
+      piece: !ruby/object:Pawn
+        color: :black
+        unmoved: false
+        moved_by_two: true
+        move_count: 1
       color: :dark_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -364,25 +364,28 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 7
         y: 5
-      piece: !ruby/object:NoPiece
-        color:
+      piece: !ruby/object:Pawn
+        color: :black
+        unmoved: false
+        moved_by_two: false
+        move_count: 1
       color: :dark_green
   - - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
         x: 0
+        y: 6
+      piece: !ruby/object:Knight
+        color: :white
+      color: :dark_green
+    - !ruby/object:Square
+      coordinate: !ruby/object:Coordinate
+        x: 1
         y: 6
       piece: !ruby/object:Pawn
         color: :black
         unmoved: true
         moved_by_two: false
         move_count: 0
-      color: :dark_green
-    - !ruby/object:Square
-      coordinate: !ruby/object:Coordinate
-        x: 1
-        y: 6
-      piece: !ruby/object:NoPiece
-        color:
       color: :light_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -428,21 +431,16 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 6
         y: 6
-      piece: !ruby/object:Pawn
-        color: :black
-        unmoved: true
-        moved_by_two: false
-        move_count: 0
+      piece: !ruby/object:NoPiece
+        color:
       color: :dark_green
     - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
         x: 7
         y: 6
-      piece: !ruby/object:Pawn
+      piece: !ruby/object:Rook
         color: :black
-        unmoved: true
-        moved_by_two: false
-        move_count: 0
+        unmoved: false
       color: :light_green
   - - !ruby/object:Square
       coordinate: !ruby/object:Coordinate
@@ -499,16 +497,16 @@ board: !ruby/object:Board
       coordinate: !ruby/object:Coordinate
         x: 7
         y: 7
-      piece: !ruby/object:Rook
-        color: :black
-        unmoved: true
+      piece: !ruby/object:NoPiece
+        color:
       color: :dark_green
-  en_passant_square: *1
-player1: &2 !ruby/object:Player
+  en_passant_square:
+player1: !ruby/object:Player
   color: :white
-player2: !ruby/object:Player
+player2: &1 !ruby/object:Player
   color: :black
-active_player: *2
+active_player: *1
 draw: false
 save: false
-file_name: game_2.yaml
+quit: false
+file_name: saved_games/game_0.yaml
