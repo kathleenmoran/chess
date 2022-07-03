@@ -114,8 +114,8 @@ describe Queen do
   end
 
   describe '#valid_captures' do
-    it 'returns nil' do
-      expect(queen.valid_captures(a1)).to be_nil
+    it 'returns an empty array' do
+      expect(queen.valid_captures(a1)).to be_empty
     end
   end
 
