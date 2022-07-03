@@ -27,7 +27,7 @@ describe Pawn do
     end
 
     context 'when the pawn has already moved' do
-      subject(:moved_pawn) { described_class.new(:black, first_move: false) }
+      subject(:moved_pawn) { described_class.new(:black, false) }
       let(:start_coordinate) { instance_double(Coordinate, x: 0, y: 2) }
       let(:valid_move) { instance_double(Coordinate, x: 0, y: 3) }
 
