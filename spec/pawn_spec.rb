@@ -123,4 +123,12 @@ describe Pawn do
       expect(unmoved_pawn).to be_occupant
     end
   end
+
+  describe '#handles_promotion?' do
+    context 'when given any string' do
+      it 'does not handle the promotion' do
+        expect(described_class.handles_promotion?('knight')).to eq(false)
+      end
+    end
+  end
 end

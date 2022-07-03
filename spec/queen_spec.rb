@@ -130,4 +130,18 @@ describe Queen do
       expect(queen).to be_occupant
     end
   end
+
+  describe '#handles_promotion?' do
+    context "when the given string is 'queen'" do
+      it 'does handle the promotion' do
+        expect(described_class.handles_promotion?('queen')).to eq(true)
+      end
+    end
+
+    context "when the given string is not 'queen'" do
+      it 'does not handle the promotion' do
+        expect(described_class.handles_promotion?('knight')).to eq(false)
+      end
+    end
+  end
 end

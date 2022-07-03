@@ -214,4 +214,18 @@ describe Bishop do
       expect(bishop).to be_occupant
     end
   end
+
+  describe '#handles_promotion?' do
+    context "when the given string is 'bishop'" do
+      it 'does handle the promotion' do
+        expect(described_class.handles_promotion?('bishop')).to eq(true)
+      end
+    end
+
+    context "when the given string is not 'bishop'" do
+      it 'does not handle the promotion' do
+        expect(described_class.handles_promotion?('queen')).to eq(false)
+      end
+    end
+  end
 end
