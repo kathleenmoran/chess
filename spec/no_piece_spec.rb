@@ -32,14 +32,14 @@ describe NoPiece do
   end
 
   describe '#valid_moves' do
-    it 'returns nil' do
-      expect(no_piece.valid_moves(d3)).to be_nil
+    it 'returns an empty array' do
+      expect(no_piece.valid_moves(d3)).to be_empty
     end
   end
 
   describe '#valid_captures' do
-    it 'returns nil' do
-      expect(no_piece.valid_captures(d3)).to be_nil
+    it 'returns an empty array' do
+      expect(no_piece.valid_captures(d3)).to be_empty
     end
   end
 
