@@ -92,8 +92,8 @@ describe King do
   end
 
   describe '#valid_captures' do
-    it 'returns nil' do
-      expect(king.valid_captures(a7)).to be_nil
+    it 'returns an empty array' do
+      expect(king.valid_captures(a7)).to be_empty
     end
   end
 
