@@ -199,7 +199,7 @@ describe Bishop do
 
   describe '#valid_captures' do
     it 'returns nil' do
-      expect(bishop.valid_captures(f2)).to be_nil
+      expect(bishop.valid_captures(f2)).to be_empty
     end
   end
 
