@@ -119,4 +119,10 @@ describe NoPiece do
       expect(no_piece).not_to be_can_en_passant
     end
   end
+
+  describe '#promotable?' do
+    it 'cannot be promoted' do
+      expect(no_piece).not_to be_promotable
+    end
+  end
 end

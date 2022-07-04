@@ -305,4 +305,10 @@ describe Bishop do
       expect(white_bishop).not_to be_can_en_passant
     end
   end
+
+  describe '#promotable?' do
+    it 'cannot be promoted' do
+      expect(white_bishop).not_to be_promotable
+    end
+  end
 end

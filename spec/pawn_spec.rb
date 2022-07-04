@@ -307,4 +307,10 @@ describe Pawn do
       expect(white_moved_by_one_pawn).to be_can_en_passant
     end
   end
+
+  describe '#promotable?' do
+    it 'can be promoted' do
+      expect(white_moved_by_one_pawn).to be_promotable
+    end
+  end
 end

@@ -263,4 +263,10 @@ describe King do
       expect(black_moved_king).not_to be_can_en_passant
     end
   end
+
+  describe '#promotable?' do
+    it 'cannot be promoted' do
+      expect(black_moved_king).not_to be_promotable
+    end
+  end
 end
