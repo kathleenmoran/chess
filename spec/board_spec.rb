@@ -177,4 +177,30 @@ describe Board do
       expect(start_board.make_board).to eql(board_values)
     end
   end
+
+  describe '#x_and_y_both_even_or_odd?' do
+    context 'when x and y are both even' do
+      it 'is both even or odd' do
+        expect(c5).to be_x_and_y_both_even_or_odd
+      end
+    end
+
+    context 'when x and y are both odd' do
+      it 'is both even or odd' do
+        expect(d8).to be_x_and_y_both_even_or_odd
+      end
+    end
+
+    context 'when x is even and y is odd' do
+      it 'is not both even or odd' do
+        expect(c4).not_to be_x_and_y_both_even_or_odd
+      end
+    end
+
+    context 'when x is odd and y is even' do
+      it 'is not both even or odd' do
+        expect(h3).to be_x_and_y_both_even_or_odd
+      end
+    end
+  end
 end

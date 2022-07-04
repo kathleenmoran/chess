@@ -11,14 +11,6 @@ class Coordinate
     @y = y_coord
   end
 
-  def duplicable?
-    true
-  end
-
-  def deep_dup
-    Coordinate.new(@x, @y)
-  end
-
   def transform(x_increment, y_increment)
     Coordinate.new(@x + x_increment, @y + y_increment)
   end
