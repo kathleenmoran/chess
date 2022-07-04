@@ -257,4 +257,10 @@ describe King do
       end
     end
   end
+
+  describe '#can_en_passant?' do
+    it 'cannot en passant' do
+      expect(black_moved_king).not_to be_can_en_passant
+    end
+  end
 end

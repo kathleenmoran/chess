@@ -113,4 +113,10 @@ describe NoPiece do
       expect(no_piece).not_to be_unmoved
     end
   end
+
+  describe '#can_en_passant?' do
+    it 'cannot en passant' do
+      expect(no_piece).not_to be_can_en_passant
+    end
+  end
 end

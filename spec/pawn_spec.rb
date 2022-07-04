@@ -301,4 +301,10 @@ describe Pawn do
       end
     end
   end
+
+  describe '#can_en_passant?' do
+    it 'cannot en passant' do
+      expect(white_moved_by_one_pawn).to be_can_en_passant
+    end
+  end
 end
