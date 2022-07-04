@@ -216,4 +216,16 @@ describe Pawn do
       expect(white_moved_pawn).to be_capturable
     end
   end
+
+  describe '#king?' do
+    it 'is not a king' do
+      expect(white_moved_pawn).not_to be_king
+    end
+  end
+
+  describe '#kingside_castle_move' do
+    it 'returns nil' do
+      expect(white_moved_pawn.kingside_castle_move(a2)).to be_nil
+    end
+  end
 end

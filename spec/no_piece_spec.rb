@@ -5,7 +5,7 @@ require_relative '../lib/coordinate'
 
 describe NoPiece do
   subject(:no_piece) { described_class.new(nil) }
-  let(:a0) { instance_double(Coordinate, x: 0, y: 0) }
+  let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
 
   let(:d3) { instance_double(Coordinate, x: 3, y: 3) }
 
@@ -22,11 +22,11 @@ describe NoPiece do
 
     context 'when the given coordinate is not one of the coordinates that starts with a piece' do
       before do
-        allow(a0).to receive(:in?).and_return(false)
+        allow(a1).to receive(:in?).and_return(false)
       end
 
       it 'does not handle' do
-        expect(described_class.handles?(a0)).to eq(false)
+        expect(described_class.handles?(a1)).to eq(false)
       end
     end
   end
@@ -87,6 +87,18 @@ describe NoPiece do
   describe '#capturable?' do
     it 'is capturable' do
       expect(no_piece).to be_capturable
+    end
+  end
+
+  describe '#king?' do
+    it 'is not a king' do
+      expect(no_piece).not_to be_king
+    end
+  end
+
+  describe '#kingside_castle_move' do
+    it 'returns nil' do
+      expect(no_piece.kingside_castle_move(a1)).to be_nil
     end
   end
 end

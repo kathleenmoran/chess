@@ -25,6 +25,9 @@ describe King do
   let(:e3) { instance_double(Coordinate, x: 4, y: 2) }
   let(:e4) { instance_double(Coordinate, x: 4, y: 3) }
   let(:e5) { instance_double(Coordinate, x: 4, y: 4) }
+  let(:e8) { instance_double(Coordinate, x: 4, y: 7) }
+
+  let(:g1) { instance_double(Coordinate, x: 6, y: 0) }
 
   let(:invalid1) { instance_double(Coordinate, x: -1, y: 6) }
   let(:invalid2) { instance_double(Coordinate, x: -1, y: 7) }
@@ -173,6 +176,31 @@ describe King do
   describe '#capturable?' do
     it 'is not capturable' do
       expect(white_unmoved_king).not_to be_capturable
+    end
+  end
+
+  describe '#king?' do
+    it 'is a king' do
+      expect(white_unmoved_king).to be_king
+    end
+  end
+
+
+  describe '#kingside_castle_move' do
+    context 'when the king has been moved' do
+      it 'returns nil' do
+        expect(black_moved_king.kingside_castle_move(e8)).to be_nil
+      end
+    end
+
+    context 'when the king has not been moved' do
+      before do
+        allow(e1).to receive(:transform).and_return(g1)
+      end
+
+      it 'returns nil' do
+        expect(white_unmoved_king.kingside_castle_move(e1)).to eq(g1)
+      end
     end
   end
 end

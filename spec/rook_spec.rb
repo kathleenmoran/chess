@@ -35,14 +35,17 @@ describe Rook do
   let(:e4) { instance_double(Coordinate, x: 4, y: 3) }
   let(:e7) { instance_double(Coordinate, x: 4, y: 6) }
 
+  let(:f1) { instance_double(Coordinate, x: 5, y: 0) }
   let(:f4) { instance_double(Coordinate, x: 5, y: 3) }
   let(:f7) { instance_double(Coordinate, x: 5, y: 6) }
 
   let(:g4) { instance_double(Coordinate, x: 6, y: 3) }
   let(:g7) { instance_double(Coordinate, x: 6, y: 6) }
 
+  let(:h1) { instance_double(Coordinate, x: 7, y: 0) }
   let(:h4) { instance_double(Coordinate, x: 7, y: 3) }
   let(:h7) { instance_double(Coordinate, x: 7, y: 6) }
+  let(:h8) { instance_double(Coordinate, x: 7, y: 7) }
 
   describe '#valid_moves' do
     context 'when the starting position is D4' do
@@ -179,6 +182,30 @@ describe Rook do
   describe '#capturable?' do
     it 'is capturable' do
       expect(white_unmoved_rook).to be_capturable
+    end
+  end
+
+  describe '#king?' do
+    it 'is not a king' do
+      expect(white_unmoved_rook).not_to be_king
+    end
+  end
+
+  describe '#kingside_castle_move' do
+    context 'when the rook has been moved' do
+      it 'returns nil' do
+        expect(black_moved_rook.kingside_castle_move(h8)).to be_nil
+      end
+    end
+
+    context 'when the rook has not been moved' do
+      before do
+        allow(h1).to receive(:transform).and_return(f1)
+      end
+
+      it 'returns nil' do
+        expect(white_unmoved_rook.kingside_castle_move(h1)).to eq(f1)
+      end
     end
   end
 end

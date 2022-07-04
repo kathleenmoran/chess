@@ -12,10 +12,14 @@ class Rook < Piece
   end
 
   def kingside_castle_move(start_coord)
+    return unless unmoved?
+
     start_coord.transform(-2, 0)
   end
 
   def queenside_castle_move(coord)
+    return unless unmoved?
+
     coord.transform(3, 0)
   end
 

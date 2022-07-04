@@ -174,4 +174,16 @@ describe Knight do
       expect(white_knight).to be_capturable
     end
   end
+
+  describe '#king?' do
+    it 'is not a king' do
+      expect(white_knight).not_to be_king
+    end
+  end
+
+  describe '#kingside_castle_move' do
+    it 'returns nil' do
+      expect(white_knight.kingside_castle_move(a8)).to be_nil
+    end
+  end
 end

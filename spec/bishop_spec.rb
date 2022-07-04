@@ -275,4 +275,16 @@ describe Bishop do
       expect(white_bishop).to be_capturable
     end
   end
+
+  describe '#king?' do
+    it 'is not a king' do
+      expect(white_bishop).not_to be_king
+    end
+  end
+
+  describe '#kingside_castle_move' do
+    it 'returns nil' do
+      expect(white_bishop.kingside_castle_move(a1)).to be_nil
+    end
+  end
 end
