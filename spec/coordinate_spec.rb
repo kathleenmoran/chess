@@ -6,6 +6,7 @@ describe Coordinate do
   subject(:d4) { described_class.new(3, 3) }
   subject(:c1) { described_class.new(2, 0) }
   subject(:b7) { described_class.new(1, 6) }
+
   describe '#transform' do
     subject(:transform_coordinate) { described_class.new(5, 5) }
 
