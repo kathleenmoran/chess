@@ -186,4 +186,10 @@ describe Knight do
       expect(white_knight.kingside_castle_move(a8)).to be_nil
     end
   end
+
+  describe '#queenside_castle_move' do
+    it 'returns nil' do
+      expect(white_knight.queenside_castle_move(a8)).to be_nil
+    end
+  end
 end

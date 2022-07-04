@@ -13,6 +13,7 @@ describe King do
   let(:b7) { instance_double(Coordinate, x: 1, y: 6) }
   let(:b8) { instance_double(Coordinate, x: 1, y: 7) }
 
+  let(:c1) { instance_double(Coordinate, x: 2, y: 0) }
   let(:c3) { instance_double(Coordinate, x: 2, y: 2) }
   let(:c4) { instance_double(Coordinate, x: 2, y: 3) }
   let(:c5) { instance_double(Coordinate, x: 2, y: 4) }
@@ -200,6 +201,24 @@ describe King do
 
       it 'returns nil' do
         expect(white_unmoved_king.kingside_castle_move(e1)).to eq(g1)
+      end
+    end
+  end
+
+  describe '#queenside_castle_move' do
+    context 'when the king has been moved' do
+      it 'returns nil' do
+        expect(black_moved_king.queenside_castle_move(e8)).to be_nil
+      end
+    end
+
+    context 'when the king has not been moved' do
+      before do
+        allow(e1).to receive(:transform).and_return(c1)
+      end
+
+      it 'returns nil' do
+        expect(white_unmoved_king.queenside_castle_move(e1)).to eq(c1)
       end
     end
   end

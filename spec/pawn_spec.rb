@@ -228,4 +228,10 @@ describe Pawn do
       expect(white_moved_pawn.kingside_castle_move(a2)).to be_nil
     end
   end
+
+  describe '#queenside_castle_move' do
+    it 'returns nil' do
+      expect(black_unmoved_pawn.queenside_castle_move(a2)).to be_nil
+    end
+  end
 end

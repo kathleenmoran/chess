@@ -62,4 +62,10 @@ describe Piece do
       expect(white_piece.kingside_castle_move(a2)).to be_nil
     end
   end
+
+  describe '#queenside_castle_move' do
+    it 'returns nil' do
+      expect(white_piece.queenside_castle_move(a2)).to be_nil
+    end
+  end
 end

@@ -101,4 +101,10 @@ describe NoPiece do
       expect(no_piece.kingside_castle_move(a1)).to be_nil
     end
   end
+
+  describe '#queenside_castle_move' do
+    it 'returns nil' do
+      expect(no_piece.queenside_castle_move(a1)).to be_nil
+    end
+  end
 end

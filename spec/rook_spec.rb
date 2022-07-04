@@ -10,6 +10,7 @@ describe Rook do
   let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a4) { instance_double(Coordinate, x: 0, y: 3) }
   let(:a7) { instance_double(Coordinate, x: 0, y: 6) }
+  let(:a8) { instance_double(Coordinate, x: 0, y: 7) }
 
   let(:b1) { instance_double(Coordinate, x: 1, y: 0) }
   let(:b2) { instance_double(Coordinate, x: 1, y: 1) }
@@ -205,6 +206,24 @@ describe Rook do
 
       it 'returns nil' do
         expect(white_unmoved_rook.kingside_castle_move(h1)).to eq(f1)
+      end
+    end
+  end
+
+  describe '#queenside_castle_move' do
+    context 'when the rook has been moved' do
+      it 'returns nil' do
+        expect(black_moved_rook.queenside_castle_move(a8)).to be_nil
+      end
+    end
+
+    context 'when the rook has not been moved' do
+      before do
+        allow(a1).to receive(:transform).and_return(d1)
+      end
+
+      it 'returns nil' do
+        expect(white_unmoved_rook.queenside_castle_move(a1)).to eq(d1)
       end
     end
   end
