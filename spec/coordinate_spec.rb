@@ -3,9 +3,11 @@
 require_relative '../lib/coordinate'
 
 describe Coordinate do
+  subject(:a1) { described_class.new(0, 0) }
   subject(:d4) { described_class.new(3, 3) }
   subject(:c1) { described_class.new(2, 0) }
   subject(:b7) { described_class.new(1, 6) }
+  subject(:g8) { described_class.new(6, 7) }
 
   describe '#transform' do
     subject(:transform_coordinate) { described_class.new(5, 5) }
@@ -196,9 +198,43 @@ describe Coordinate do
       end
     end
 
-    context 'when one coordinate is even and the other is odd' do
+    context 'when x is even and y is odd' do
       it 'is not both odd or even' do
         expect(b7).not_to be_x_and_y_both_even_or_odd
+      end
+    end
+
+    context 'when x is odd and y is even' do
+      it 'is not both odd or even' do
+        expect(g8).not_to be_x_and_y_both_even_or_odd
+      end
+    end
+  end
+
+  describe '#in_first_row?' do
+    context 'when the y coordinate is 0' do
+      it 'is in the first row' do
+        expect(a1).to be_in_first_row
+      end
+    end
+
+    context 'when the y coordinate is not 0' do
+      it 'is not in the first row' do
+        expect(d4).not_to be_in_first_row
+      end
+    end
+  end
+
+  describe '#in_last_row?' do
+    context 'when the y coordinate is 7' do
+      it 'is in the last row' do
+        expect(g8).to be_in_last_row
+      end
+    end
+
+    context 'when the y coordinate is not 7' do
+      it 'is not in the last row' do
+        expect(a1).not_to be_in_last_row
       end
     end
   end
