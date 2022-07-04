@@ -4,9 +4,18 @@ require_relative '../lib/coordinate'
 
 describe Coordinate do
   subject(:a1) { described_class.new(0, 0) }
-  subject(:d4) { described_class.new(3, 3) }
-  subject(:c1) { described_class.new(2, 0) }
+  subject(:a3) { described_class.new(0, 2) }
+
   subject(:b7) { described_class.new(1, 6) }
+
+  subject(:c1) { described_class.new(2, 0) }
+
+  subject(:d2) { described_class.new(3, 1) }
+  subject(:d3) { described_class.new(3, 2) }
+  subject(:d4) { described_class.new(3, 3) }
+
+  subject(:e6) { described_class.new(4, 6) }
+
   subject(:g8) { described_class.new(6, 7) }
 
   describe '#transform' do
@@ -235,6 +244,36 @@ describe Coordinate do
     context 'when the y coordinate is not 7' do
       it 'is not in the last row' do
         expect(a1).not_to be_in_last_row
+      end
+    end
+  end
+
+  describe '#moved_two_vertically?' do
+    context "when the given coordinate has a x that is equal to thee coordinate's x and a y"\
+    " that is greater than the coordinate's y by 2" do
+      it 'has been moved by 2 vertically' do
+        expect(a1).to be_moved_two_vertically(a3)
+      end
+    end
+
+    context "when the given coordinate has a x that is equal to the coordinate's x and a y"\
+    " that is less than the coordinate's x by 2" do
+      it 'has been moved by 2 vertically' do
+        expect(d4).to be_moved_two_vertically(d2)
+      end
+    end
+
+    context "when the given coordinate has a x that is equal to the coordinate's x and a y"\
+    " that is not greater than or less than the coordinate's x by 2" do
+      it 'has been moved by 2 vertically' do
+        expect(d4).not_to be_moved_two_vertically(d3)
+      end
+    end
+
+    context "when the given coordinate has a x that is not equal to the coordinate's x and a y"\
+    " that is greater than or less than the coordinate's x by 2" do
+      it 'has been moved by 2 vertically' do
+        expect(d4).not_to be_moved_two_vertically(e6)
       end
     end
   end
