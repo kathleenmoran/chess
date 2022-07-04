@@ -2,12 +2,21 @@
 
 require_relative '../lib/pawn'
 require_relative '../lib/coordinate'
+require_relative '../lib/player'
 
 describe Pawn do
   let(:a2) { instance_double(Coordinate, x: 0, y: 1) }
   let(:a3) { instance_double(Coordinate, x: 0, y: 2) }
+  let(:a4) { instance_double(Coordinate, x: 0, y: 3) }
+  let(:a5) { instance_double(Coordinate, x: 0, y: 4) }
+  let(:a7) { instance_double(Coordinate, x: 0, y: 6) }
+
   subject(:black_unmoved_pawn) { described_class.new(:black) }
   subject(:white_moved_pawn) { described_class.new(:white, false, true, 1) }
+  subject(:white_moved_by_one_pawn) { described_class.new(:white, false, false, 1) }
+
+  let(:white_player) { instance_double(Player, color: :white) }
+  let(:black_player) { instance_double(Player, color: :white) }
 
   describe '#valid_moves' do
     context "when the pawn hasn't been moved yet" do
@@ -245,6 +254,50 @@ describe Pawn do
     context 'when the pawn has been moved' do
       it 'is not unmoved' do
         expect(white_moved_pawn).not_to be_unmoved
+      end
+    end
+  end
+
+  describe '#move' do
+    context 'when the rook has not been moved before and is moved by two' do
+      before do
+        allow(a7).to receive(:moved_two_vertically?).with(a5).and_return(true)
+      end
+
+      it 'changes ummoved to false' do
+        expect { black_unmoved_pawn.move(a7, a5, black_player) }
+          .to change { black_unmoved_pawn.instance_variable_get(:@unmoved) }.from(true).to(false)
+      end
+
+      it 'changes moved_by_two to true' do
+        expect { black_unmoved_pawn.move(a7, a5, black_player) }
+          .to change { black_unmoved_pawn.instance_variable_get(:@moved_by_two) }.from(false).to(true)
+      end
+
+      it 'increases the move count by 1' do
+        expect { black_unmoved_pawn.move(a7, a5, black_player) }
+          .to change { black_unmoved_pawn.instance_variable_get(:@move_count) }.by(1)
+      end
+    end
+
+    context 'when the rook has been moved before' do
+      before do
+        allow(a3).to receive(:moved_two_vertically?).with(a4).and_return(false)
+      end
+  
+      it 'does not change unmoved' do
+        expect { white_moved_by_one_pawn.move(a3, a4, white_player) }
+          .not_to change { white_moved_pawn.instance_variable_get(:@unmoved) }.from(false)
+      end
+
+      it 'does not change moved_by_two' do
+        expect { white_moved_by_one_pawn.move(a3, a4, white_player) }
+          .not_to change { white_moved_by_one_pawn.instance_variable_get(:@moved_by_two) }.from(false)
+      end
+
+      it 'changes the move count by 1' do
+        expect { white_moved_by_one_pawn.move(a3, a4, white_player) }
+          .to change { white_moved_by_one_pawn.instance_variable_get(:@move_count) }.by(1)
       end
     end
   end

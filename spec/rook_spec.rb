@@ -2,6 +2,7 @@
 
 require_relative '../lib/rook'
 require_relative '../lib/coordinate'
+require_relative '../lib/player'
 
 describe Rook do
   subject(:black_moved_rook) { described_class.new(:black, false) }
@@ -47,6 +48,9 @@ describe Rook do
   let(:h4) { instance_double(Coordinate, x: 7, y: 3) }
   let(:h7) { instance_double(Coordinate, x: 7, y: 6) }
   let(:h8) { instance_double(Coordinate, x: 7, y: 7) }
+
+  let(:white_player) { instance_double(Player, color: :white) }
+  let(:black_player) { instance_double(Player, color: :white) }
 
   describe '#valid_moves' do
     context 'when the starting position is D4' do
@@ -238,6 +242,22 @@ describe Rook do
     context 'when the rook has been moved' do
       it 'is not unmoved' do
         expect(black_moved_rook).not_to be_unmoved
+      end
+    end
+  end
+
+  describe '#move' do
+    context 'when the rook has not been moved before' do
+      it 'changes ummoved to false' do
+        expect { white_unmoved_rook.move(a1, b1, white_player) }
+          .to change { white_unmoved_rook.instance_variable_get(:@unmoved) }.from(true).to(false)
+      end
+    end
+
+    context 'when the rook has been moved before' do
+      it 'does not change unmoved' do
+        expect { black_moved_rook.move(b1, b8, black_player) }
+          .not_to change { black_moved_rook.instance_variable_get(:@unmoved) }.from(false)
       end
     end
   end

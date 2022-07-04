@@ -2,6 +2,7 @@
 
 require_relative '../lib/king'
 require_relative '../lib/coordinate'
+require_relative '../lib/player'
 
 describe King do
   subject(:black_moved_king) { described_class.new(:black, false) }
@@ -23,6 +24,7 @@ describe King do
   let(:d5) { instance_double(Coordinate, x: 3, y: 4) }
 
   let(:e1) { instance_double(Coordinate, x: 4, y: 0) }
+  let(:e2) { instance_double(Coordinate, x: 4, y: 1) }
   let(:e3) { instance_double(Coordinate, x: 4, y: 2) }
   let(:e4) { instance_double(Coordinate, x: 4, y: 3) }
   let(:e5) { instance_double(Coordinate, x: 4, y: 4) }
@@ -35,6 +37,9 @@ describe King do
   let(:invalid3) { instance_double(Coordinate, x: -1, y: 8) }
   let(:invalid4) { instance_double(Coordinate, x: 0, y: 8) }
   let(:invalid5) { instance_double(Coordinate, x: 1, y: 8) }
+
+  let(:white_player) { instance_double(Player, color: :white) }
+  let(:black_player) { instance_double(Player, color: :white) }
 
   describe '#valid_moves' do
     context 'when the king has a starting position of D4' do
@@ -233,6 +238,22 @@ describe King do
     context 'when the king has been moved' do
       it 'is not unmoved' do
         expect(black_moved_king).not_to be_unmoved
+      end
+    end
+  end
+
+  describe '#move' do
+    context 'when the king has not been moved before' do
+      it 'changes ummoved to false' do
+        expect { white_unmoved_king.move(e1, e2, white_player) }
+          .to change { white_unmoved_king.instance_variable_get(:@unmoved) }.from(true).to(false)
+      end
+    end
+
+    context 'when the king has been moved before' do
+      it 'does not change unmoved' do
+        expect { black_moved_king.move(e1, e2, black_player) }
+          .not_to change { black_moved_king.instance_variable_get(:@unmoved) }.from(false)
       end
     end
   end
