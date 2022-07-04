@@ -234,4 +234,18 @@ describe Pawn do
       expect(black_unmoved_pawn.queenside_castle_move(a2)).to be_nil
     end
   end
+
+  describe '#unmoved?' do
+    context 'when the pawn has not been moved' do
+      it 'is unmoved' do
+        expect(black_unmoved_pawn).to be_unmoved
+      end
+    end
+
+    context 'when the pawn has been moved' do
+      it 'is not unmoved' do
+        expect(white_moved_pawn).not_to be_unmoved
+      end
+    end
+  end
 end

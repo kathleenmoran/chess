@@ -107,4 +107,10 @@ describe NoPiece do
       expect(no_piece.queenside_castle_move(a1)).to be_nil
     end
   end
+
+  describe '#unmoved?' do
+    it 'is not unmoved' do
+      expect(no_piece).not_to be_unmoved
+    end
+  end
 end

@@ -222,4 +222,18 @@ describe King do
       end
     end
   end
+
+  describe '#unmoved?' do
+    context 'when the king has not been moved' do
+      it 'is unmoved' do
+        expect(white_unmoved_king).to be_unmoved
+      end
+    end
+
+    context 'when the king has been moved' do
+      it 'is not unmoved' do
+        expect(black_moved_king).not_to be_unmoved
+      end
+    end
+  end
 end

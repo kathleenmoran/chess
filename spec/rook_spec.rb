@@ -227,4 +227,18 @@ describe Rook do
       end
     end
   end
+
+  describe '#unmoved?' do
+    context 'when the rook has not been moved' do
+      it 'is unmoved' do
+        expect(white_unmoved_rook).to be_unmoved
+      end
+    end
+
+    context 'when the rook has been moved' do
+      it 'is not unmoved' do
+        expect(black_moved_rook).not_to be_unmoved
+      end
+    end
+  end
 end

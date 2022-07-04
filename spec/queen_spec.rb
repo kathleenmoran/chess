@@ -213,4 +213,10 @@ describe Queen do
       expect(white_queen.queenside_castle_move(a1)).to be_nil
     end
   end
+
+  describe '#unmoved?' do
+    it 'is not unmoved' do
+      expect(white_queen).not_to be_unmoved
+    end
+  end
 end
