@@ -189,4 +189,10 @@ describe Queen do
       end
     end
   end
+
+  describe '#capturable?' do
+    it 'is capturable' do
+      expect(white_queen).to be_capturable
+    end
+  end
 end

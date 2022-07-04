@@ -269,4 +269,10 @@ describe Bishop do
       end
     end
   end
+
+  describe '#capturable?' do
+    it 'is capturable' do
+      expect(white_bishop).to be_capturable
+    end
+  end
 end

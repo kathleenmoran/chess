@@ -175,4 +175,10 @@ describe Rook do
       end
     end
   end
+
+  describe '#capturable?' do
+    it 'is capturable' do
+      expect(white_unmoved_rook).to be_capturable
+    end
+  end
 end

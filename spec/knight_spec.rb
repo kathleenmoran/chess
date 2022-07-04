@@ -168,4 +168,10 @@ describe Knight do
       end
     end
   end
+
+  describe '#capturable?' do
+    it 'is capturable' do
+      expect(white_knight).to be_capturable
+    end
+  end
 end

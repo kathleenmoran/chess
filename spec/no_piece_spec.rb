@@ -83,4 +83,10 @@ describe NoPiece do
       expect(no_piece.deep_dup.instance_variable_get(:@color)).to be_nil
     end
   end
+
+  describe '#capturable?' do
+    it 'is capturable' do
+      expect(no_piece).to be_capturable
+    end
+  end
 end
