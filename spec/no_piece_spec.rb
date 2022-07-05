@@ -131,4 +131,10 @@ describe NoPiece do
       expect(no_piece).not_to be_capturable_by_en_passant
     end
   end
+
+  describe '#can_capture_forward?' do
+    it 'can capture forward' do
+      expect(no_piece).to be_can_capture_forward
+    end
+  end
 end

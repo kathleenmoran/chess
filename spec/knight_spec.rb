@@ -216,4 +216,10 @@ describe Knight do
       expect(white_knight).not_to be_capturable_by_en_passant
     end
   end
+
+  describe '#can_capture_forward?' do
+    it 'can capture forward' do
+      expect(white_knight).to be_can_capture_forward
+    end
+  end
 end

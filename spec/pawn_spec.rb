@@ -334,4 +334,10 @@ describe Pawn do
       end
     end
   end
+
+  describe '#can_capture_forward?' do
+    it 'cannot capture forward' do
+      expect(white_moved_by_one_pawn).not_to be_can_capture_forward
+    end
+  end
 end

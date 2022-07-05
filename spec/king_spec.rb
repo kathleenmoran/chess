@@ -275,4 +275,10 @@ describe King do
       expect(black_moved_king).not_to be_capturable_by_en_passant
     end
   end
+
+  describe '#can_capture_forward?' do
+    it 'can capture forward' do
+      expect(black_moved_king).to be_can_capture_forward
+    end
+  end
 end

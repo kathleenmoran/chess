@@ -92,4 +92,10 @@ describe Piece do
       expect(white_piece).not_to be_capturable_by_en_passant
     end
   end
+
+  describe '#can_capture_forward?' do
+    it 'cannot capture forward' do
+      expect(white_piece).to be_can_capture_forward
+    end
+  end
 end

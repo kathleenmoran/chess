@@ -279,4 +279,10 @@ describe Rook do
       expect(black_moved_rook).not_to be_capturable_by_en_passant
     end
   end
+
+  describe '#can_capture_forward?' do
+    it 'cannot capture forward' do
+      expect(black_moved_rook).to be_can_capture_forward
+    end
+  end
 end
