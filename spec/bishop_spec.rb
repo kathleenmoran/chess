@@ -311,4 +311,10 @@ describe Bishop do
       expect(white_bishop).not_to be_promotable
     end
   end
+
+  describe '#capturable_by_en_passant?' do
+    it 'cannot be captured by en passant' do
+      expect(white_bishop).not_to be_capturable_by_en_passant
+    end
+  end
 end

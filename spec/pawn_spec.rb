@@ -14,6 +14,7 @@ describe Pawn do
   subject(:black_unmoved_pawn) { described_class.new(:black) }
   subject(:white_moved_pawn) { described_class.new(:white, false, true, 1) }
   subject(:white_moved_by_one_pawn) { described_class.new(:white, false, false, 1) }
+  subject(:black_moved_by_two_pawn) { described_class.new(:black, false, true, 2) }
 
   let(:white_player) { instance_double(Player, color: :white) }
   let(:black_player) { instance_double(Player, color: :white) }
@@ -311,6 +312,26 @@ describe Pawn do
   describe '#promotable?' do
     it 'can be promoted' do
       expect(white_moved_by_one_pawn).to be_promotable
+    end
+  end
+
+  describe '#capturable_by_en_passant?' do
+    context 'when the pawn has been moved once and been moved by two' do
+      it 'can be captured by en passant' do
+        expect(white_moved_pawn).to be_capturable_by_en_passant
+      end
+    end
+
+    context 'when the pawn has been moved twice and been moved by two' do
+      it 'cannot be captured by en passant' do
+        expect(black_moved_by_two_pawn).not_to be_capturable_by_en_passant
+      end
+    end
+
+    context 'when the pawn has been moved once and has not been moved by two' do
+      it 'cannot be captured by en passant' do
+        expect(white_moved_by_one_pawn).not_to be_capturable_by_en_passant
+      end
     end
   end
 end
