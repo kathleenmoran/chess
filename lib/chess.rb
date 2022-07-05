@@ -8,8 +8,6 @@ require 'yaml'
 # a chess game
 class Chess
   include Displayable
-  attr_reader :board
-
   def initialize
     @board = Board.new
     @player1 = Player.new(:white)

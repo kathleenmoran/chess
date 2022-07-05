@@ -51,6 +51,14 @@ class Board
     end
   end
 
+  def select_piece(coord, player, opponent)
+    highlight_piece_and_moves(find_square(coord), legal_moves(coord, player, opponent))
+  end
+
+  def deselect_piece(coord, player, opponent)
+    remove_square_highlights([find_square(coord)] + legal_moves(coord, player, opponent))
+  end
+
   def color_king(player, opponent)
     if checkmate?(player, opponent)
       highlight_king(player, :red)
@@ -287,13 +295,5 @@ class Board
     new_board = deep_dup
     new_board.update_with_move(start_square.coordinate, end_square.coordinate, player)
     new_board.check?(player, opponent)
-  end
-
-  def select_piece(coord, player, opponent)
-    highlight_piece_and_moves(find_square(coord), legal_moves(coord, player, opponent))
-  end
-
-  def deselect_piece(coord, player, opponent)
-    remove_square_highlights([find_square(coord)] + legal_moves(coord, player, opponent))
   end
 end

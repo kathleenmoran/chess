@@ -13,9 +13,7 @@ require_relative 'no_piece'
 # a square on a chessboard
 class Square
   include Displayable
-  attr_reader :coordinate
-  attr_reader :piece
-
+  attr_reader :piece, :coordinate
   def initialize(coordinate, piece = Piece.for(coordinate))
     @coordinate = coordinate
     @piece = piece
@@ -28,11 +26,6 @@ class Square
 
   def ==(other)
     self.class == other.class && @coordinate == other.coordinate
-  end
-
-  def piece_color
-    return :white if occupied_by_white?
-    return :black if occupied_by_black?
   end
 
   def eql?(other)

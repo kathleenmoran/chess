@@ -7,7 +7,6 @@ require_relative 'constants'
 class Piece
   include Displayable
   attr_reader :color
-
   def initialize(color = nil)
     @color = color
   end
