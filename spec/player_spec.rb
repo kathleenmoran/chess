@@ -27,6 +27,9 @@ describe Player do
   let(:g1) { instance_double(Coordinate, x: 6, y: 0) }
   let(:g8) { instance_double(Coordinate, x: 6, y: 7) }
 
+  let(:h1) { instance_double(Coordinate, x: 7, y: 0) }
+  let(:h8) { instance_double(Coordinate, x: 7, y: 7) }
+
   let(:black_pawn) { instance_double(Piece, color: :black) }
   let(:white_pawn) { instance_double(Piece, color: :white) }
 
@@ -123,6 +126,20 @@ describe Player do
     context 'when the player is black' do
       it 'returns a coordinate with an x of 7 and a y of 0' do
         expect(black_player.queenside_rook_coord).to eql(a8)
+      end
+    end
+  end
+
+  describe '#kingside_rook_coord' do
+    context 'when the player is white' do
+      it 'returns a coordinate with an x of 0 and a y of 0' do
+        expect(white_player.kingside_rook_coord).to eql(h1)
+      end
+    end
+
+    context 'when the player is black' do
+      it 'returns a coordinate with an x of 7 and a y of 0' do
+        expect(black_player.kingside_rook_coord).to eql(h8)
       end
     end
   end
