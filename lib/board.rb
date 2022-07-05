@@ -37,23 +37,111 @@ class Board
     "\n#{string_board}\n   A  B  C  D  E  F  G  H\n\n"
   end
 
-  def row_to_s(row)
-    row.join
-  end
-
   def valid_move?(start_coord, end_coord, player, opponent)
     player.own_piece_at_square?(find_square(start_coord)) &&
       legal_moves(start_coord, player, opponent).include?(find_square(end_coord))
   end
 
-  def make_board
-    (0...Constants::BOARD_DIMENSION).to_a.map { |y_coord| make_row(y_coord) }
+  def check?(player, opponent, kings_square = find_king_square(player))
+    @squares.any? do |row|
+      row.any? do |square|
+        opponent.own_piece_at_square?(square) &&
+          reachable_squares(square.coordinate, opponent, player).include?(kings_square)
+      end
+    end
   end
 
-  def legal_moves(coord, player, opponent)
-    reachable_squares(coord, player, opponent).select do |end_square|
-      end_square.piece_capturable? && !move_results_in_check?(player, opponent, find_square(coord), end_square)
+  def color_king(player, opponent)
+    if checkmate?(player, opponent)
+      highlight_king(player, :red)
+    elsif check?(player, opponent)
+      highlight_king(player, :orange)
+    else
+      unhighlight_king(player)
     end
+  end
+
+  def checkmate?(player, opponent)
+    check?(player, opponent) && no_way_out_of_check?(player, opponent)
+  end
+
+  def stalemate?(player, opponent)
+    !check?(player, opponent) && no_way_out_of_check?(player, opponent)
+  end
+
+  def update_with_move(start_coord, end_coord, player)
+    start_square = find_square(start_coord)
+    end_square = find_square(end_coord)
+
+    potential_en_passant_square = find_square(end_square.piece_en_passant_coord(start_square))
+    @en_passant_square.remove_piece if !@en_passant_square.nil? && potential_en_passant_square == @en_passant_square
+
+    make_move(start_square, end_square, player)
+
+    update_en_passant_square(find_square(end_coord))
+
+    end_square.promote_piece if end_square.piece_promotable?
+  end
+
+  def valid_start_square?(coordinate, player, opponent)
+    player.own_piece_at_square?(find_square(coordinate)) && !legal_moves(coordinate, player, opponent).empty?
+  end
+
+  private
+
+  def make_row(y_coord)
+    (0...Constants::BOARD_DIMENSION).to_a.map { |x_coord| Square.new(Coordinate.new(x_coord, y_coord)) }
+  end
+
+  def make_normal_move(start_square, end_square, player)
+    end_square.place_piece(start_square.piece)
+    start_square.remove_piece
+    end_square.move_piece(start_square.coordinate, end_square.coordinate, player)
+  end
+
+  def update_en_passant_square(end_square)
+    @en_passant_square = end_square.en_passant_capture_square? ? end_square : nil
+  end
+
+  def make_move(start_square, end_square, player)
+    if queenside_castle_move?(start_square.coordinate, end_square.coordinate)
+      castle_queenside(player)
+    elsif kingside_castle_move?(start_square.coordinate, end_square.coordinate)
+      castle_kingside(player)
+    else
+      make_normal_move(start_square, end_square, player)
+    end
+  end
+
+  def queenside_castle_move?(start_coord, end_coord)
+    find_square(start_coord).occupied_by_king? && end_coord == start_coord.transform(-2, 0)
+  end
+
+  def kingside_castle_move?(start_coord, end_coord)
+    find_square(start_coord).occupied_by_king? && end_coord == start_coord.transform(2, 0)
+  end
+
+  def find_square(coordinate)
+    return if coordinate.nil?
+
+    @squares[coordinate.y][coordinate.x]
+  end
+
+  def find_squares(coordinates)
+    coordinates.map { |coordinate| find_square(coordinate) }
+  end
+
+  def highlight_piece_and_moves(piece_square, move_squares)
+    piece_square.highlight(:yellow)
+    move_squares.map { |square| square.highlight(:neon_green) }
+  end
+
+  def remove_square_highlights(squares)
+    squares.map(&:remove_highlight)
+  end
+
+  def make_board
+    (0...Constants::BOARD_DIMENSION).to_a.map { |y_coord| make_row(y_coord) }
   end
 
   def reachable_squares(coord, player, opponent)
@@ -61,6 +149,12 @@ class Board
     normal_move_squares(start_square, player) +
       diagonal_capture_squares(start_square, player) +
       valid_king_castle_squares(start_square, player, opponent)
+  end
+
+  def legal_moves(coord, player, opponent)
+    reachable_squares(coord, player, opponent).select do |end_square|
+      end_square.piece_capturable? && !move_results_in_check?(player, opponent, find_square(coord), end_square)
+    end
   end
 
   def valid_king_castle_squares(start_square, player, opponent)
@@ -164,39 +258,12 @@ class Board
     end
   end
 
-  def check?(player, opponent, kings_square = find_king_square(player))
-    @squares.any? do |row|
-      row.any? do |square|
-        opponent.own_piece_at_square?(square) &&
-          reachable_squares(square.coordinate, opponent, player).include?(kings_square)
-      end
-    end
-  end
-
-  def color_king(player, opponent)
-    if checkmate?(player, opponent)
-      highlight_king(player, :red)
-    elsif check?(player, opponent)
-      highlight_king(player, :orange)
-    else
-      unhighlight_king(player)
-    end
-  end
-
   def highlight_king(player, color)
     find_king_square(player).highlight(color)
   end
 
   def unhighlight_king(player)
     find_king_square(player).remove_highlight
-  end
-
-  def checkmate?(player, opponent)
-    check?(player, opponent) && no_way_out_of_check?(player, opponent)
-  end
-
-  def stalemate?(player, opponent)
-    !check?(player, opponent) && no_way_out_of_check?(player, opponent)
   end
 
   def no_way_out_of_check?(player, opponent)
@@ -228,76 +295,5 @@ class Board
 
   def deselect_piece(coord, player, opponent)
     remove_square_highlights([find_square(coord)] + legal_moves(coord, player, opponent))
-  end
-
-  def highlight_piece_and_moves(piece_square, move_squares)
-    piece_square.highlight(:yellow)
-    move_squares.map { |square| square.highlight(:neon_green) }
-  end
-
-  def remove_square_highlights(squares)
-    squares.map(&:remove_highlight)
-  end
-
-  def find_squares(coordinates)
-    coordinates.map { |coordinate| find_square(coordinate) }
-  end
-
-  def find_square(coordinate)
-    return if coordinate.nil?
-
-    @squares[coordinate.y][coordinate.x]
-  end
-
-  def queenside_castle_move?(start_coord, end_coord)
-    find_square(start_coord).occupied_by_king? && end_coord == start_coord.transform(-2, 0)
-  end
-
-  def kingside_castle_move?(start_coord, end_coord)
-    find_square(start_coord).occupied_by_king? && end_coord == start_coord.transform(2, 0)
-  end
-
-  def update_with_move(start_coord, end_coord, player)
-    start_square = find_square(start_coord)
-    end_square = find_square(end_coord)
-
-    potential_en_passant_square = find_square(end_square.piece_en_passant_coord(start_square))
-    @en_passant_square.remove_piece if !@en_passant_square.nil? && potential_en_passant_square == @en_passant_square
-
-    make_move(start_square, end_square, player)
-
-    update_en_passant_square(find_square(end_coord))
-
-    end_square.promote_piece if end_square.piece_promotable?
-  end
-
-  def update_en_passant_square(end_square)
-    @en_passant_square = end_square.en_passant_capture_square? ? end_square : nil
-  end
-
-  def make_normal_move(start_square, end_square, player)
-    end_square.place_piece(start_square.piece)
-    start_square.remove_piece
-    end_square.move_piece(start_square.coordinate, end_square.coordinate, player)
-  end
-
-  def make_move(start_square, end_square, player)
-    if queenside_castle_move?(start_square.coordinate, end_square.coordinate)
-      castle_queenside(player)
-    elsif kingside_castle_move?(start_square.coordinate, end_square.coordinate)
-      castle_kingside(player)
-    else
-      make_normal_move(start_square, end_square, player)
-    end
-  end
-
-  def valid_start_square?(coordinate, player, opponent)
-    player.own_piece_at_square?(find_square(coordinate)) && !legal_moves(coordinate, player, opponent).empty?
-  end
-
-  private
-
-  def make_row(y_coord)
-    (0...Constants::BOARD_DIMENSION).to_a.map { |x_coord| Square.new(Coordinate.new(x_coord, y_coord)) }
   end
 end

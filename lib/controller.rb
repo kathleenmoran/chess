@@ -20,6 +20,8 @@ class Controller
     ask_to_play_again
   end
 
+  private
+
   def play_saved_game
     print_file_names
     user_input = prompt_user_to_select_file

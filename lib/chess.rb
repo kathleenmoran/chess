@@ -21,18 +21,6 @@ class Chess
     @file_name = nil
   end
 
-  def play_turn
-    start_coord = select_piece
-    return if @draw || @save || @quit
-
-    end_coord = select_move(start_coord)
-    return if @draw || @save || @quit
-
-    @board.update_with_move(start_coord, end_coord, @active_player)
-    manage_check_warnings
-    puts @board
-  end
-
   def play_game
     puts @board
     until @board.checkmate?(@active_player, inactive_player) || @board.stalemate?(@active_player, inactive_player)
@@ -44,6 +32,20 @@ class Chess
     end
     puts @board
     print_end_game_message
+  end
+
+  private
+
+  def play_turn
+    start_coord = select_piece
+    return if @draw || @save || @quit
+
+    end_coord = select_move(start_coord)
+    return if @draw || @save || @quit
+
+    @board.update_with_move(start_coord, end_coord, @active_player)
+    manage_check_warnings
+    puts @board
   end
 
   def print_end_game_message

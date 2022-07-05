@@ -23,7 +23,7 @@ class Square
   end
 
   def deep_dup
-    Square.new(@coordinate.deep_dup, @piece.deep_dup)
+    Square.new(@coordinate, @piece.deep_dup)
   end
 
   def ==(other)
@@ -40,10 +40,6 @@ class Square
   end
 
   def to_s
-    color_background(@piece.to_s, @color)
-  end
-
-  def to_str
     color_background(@piece.to_s, @color)
   end
 
@@ -145,5 +141,12 @@ class Square
 
   def piece_y_move_sign
     @piece.y_move_sign
+  end
+
+  private
+
+  def piece_color
+    return :white if occupied_by_white?
+    return :black if occupied_by_black?
   end
 end

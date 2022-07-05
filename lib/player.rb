@@ -15,18 +15,6 @@ class Player
     @color.to_s.capitalize
   end
 
-  def checked?
-    @checked
-  end
-
-  def white?
-    @color == :white
-  end
-
-  def black?
-    @color == :black
-  end
-
   def queenside_rook_coord
     Coordinate.new(0, piece_row)
   end
@@ -41,14 +29,6 @@ class Player
 
   def kingside_rook_coord
     Coordinate.new(7, piece_row)
-  end
-
-  def piece_row
-    if white?
-      0
-    elsif black?
-      7
-    end
   end
 
   def own_piece_at_square?(square)
@@ -81,6 +61,8 @@ class Player
     end
   end
 
+  private
+
   def opponent_draw_response(opponent)
     opponent_response = prompt_opponent_for_draw_response(opponent).downcase
     if %w[y yes].include?(opponent_response)
@@ -99,5 +81,21 @@ class Player
 
   def alpha_to_numeric_coord(alpha_coord)
     Coordinate.new(alpha_coord[0].upcase.ord - 65, alpha_coord[1].to_i - 1)
+  end
+
+  def piece_row
+    if white?
+      0
+    elsif black?
+      7
+    end
+  end
+
+  def white?
+    @color == :white
+  end
+
+  def black?
+    @color == :black
   end
 end
