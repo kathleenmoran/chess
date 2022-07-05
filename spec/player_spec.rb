@@ -48,4 +48,51 @@ describe Player do
       end
     end
   end
+
+  describe '#does_not_own_piece_at_square?' do
+
+    context 'when the colors of the player and piece at the given square are both black' do
+      before do
+        allow(square_with_black_piece).to receive(:occupied_by_white?).and_return(false)
+      end
+
+      it 'owns the piece at the square' do
+        expect(black_player).not_to be_does_not_own_piece_at_square(square_with_black_piece)
+      end
+    end
+
+    context 'when the colors of the player and piece at the given square are both white' do
+      before do
+        allow(square_with_white_piece).to receive(:occupied_by_black?).and_return(false)
+      end
+
+      it 'owns the piece at the square' do
+        expect(white_player).not_to be_does_not_own_piece_at_square(square_with_white_piece)
+      end
+    end
+
+    context 'when the colors of the player and piece at the given square are different' do
+      before do
+        allow(square_with_black_piece).to receive(:occupied_by_black?).and_return(true)
+      end
+
+      it 'does not own the piece at the square' do
+        expect(white_player).to be_does_not_own_piece_at_square(square_with_black_piece)
+      end
+    end
+  end
+
+  describe '#select_start_square' do
+    it 'calls select square with the opponent as a parameter' do
+      expect(black_player).to receive(:select_square).with(white_player)
+      black_player.select_start_square(white_player)
+    end
+  end
+
+  describe '#select_end_square' do
+    it 'calls select square with the opponent as a parameter' do
+      expect(black_player).to receive(:select_square).with(white_player)
+      black_player.select_end_square(white_player)
+    end
+  end
 end
