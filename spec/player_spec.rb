@@ -8,7 +8,24 @@ describe Player do
   subject(:black_player) { described_class.new(:black) }
   subject(:white_player) { described_class.new(:white) }
 
+  let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a2) { instance_double(Coordinate, x: 0, y: 2) }
+  let(:a8) { instance_double(Coordinate, x: 0, y: 7) }
+
+  let(:b1) { instance_double(Coordinate, x: 1, y: 0) }
+  let(:b8) { instance_double(Coordinate, x: 1, y: 7) }
+
+  let(:c1) { instance_double(Coordinate, x: 2, y: 0) }
+  let(:c8) { instance_double(Coordinate, x: 2, y: 7) }
+
+  let(:d1) { instance_double(Coordinate, x: 3, y: 0) }
+  let(:d8) { instance_double(Coordinate, x: 3, y: 7) }
+
+  let(:f1) { instance_double(Coordinate, x: 5, y: 0) }
+  let(:f8) { instance_double(Coordinate, x: 5, y: 7) }
+
+  let(:g1) { instance_double(Coordinate, x: 6, y: 0) }
+  let(:g8) { instance_double(Coordinate, x: 6, y: 7) }
 
   let(:black_pawn) { instance_double(Piece, color: :black) }
   let(:white_pawn) { instance_double(Piece, color: :white) }
@@ -93,6 +110,48 @@ describe Player do
     it 'calls select square with the opponent as a parameter' do
       expect(black_player).to receive(:select_square).with(white_player)
       black_player.select_end_square(white_player)
+    end
+  end
+
+  describe '#queenside_rook_coord' do
+    context 'when the player is white' do
+      it 'returns a coordinate with an x of 0 and a y of 0' do
+        expect(white_player.queenside_rook_coord).to eql(a1)
+      end
+    end
+
+    context 'when the player is black' do
+      it 'returns a coordinate with an x of 7 and a y of 0' do
+        expect(black_player.queenside_rook_coord).to eql(a8)
+      end
+    end
+  end
+
+  describe '#queenside_castle_path' do
+    context 'when the player is white' do
+      it 'returns the queenside path in the bottom row' do
+        expect(white_player.queenside_castle_path).to eql([d1, c1, b1])
+      end
+    end
+
+    context 'when the player is black' do
+      it 'returns the queenside path in the top row' do
+        expect(black_player.queenside_castle_path).to eql([d8, c8, b8])
+      end
+    end
+  end
+
+  describe '#kingside_castle_path' do
+    context 'when the player is white' do
+      it 'returns the queenside path in the bottom row' do
+        expect(white_player.kingside_castle_path).to eql([f1, g1])
+      end
+    end
+
+    context 'when the player is black' do
+      it 'returns the queenside path in the top row' do
+        expect(black_player.kingside_castle_path).to eql([f8, g8])
+      end
     end
   end
 end
