@@ -5,6 +5,7 @@ require_relative '../lib/displayable'
 require_relative '../lib/coordinate'
 require_relative '../lib/no_piece'
 require_relative '../lib/queen'
+require_relative '../lib/player'
 
 describe Square do
   let(:square_a1) { described_class.new(a1) }
@@ -17,6 +18,7 @@ describe Square do
 
   let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a2) { instance_double(Coordinate, x: 0, y: 1) }
+  let(:a3) { instance_double(Coordinate, x: 0, y: 2) }
   let(:a8) { instance_double(Coordinate, x: 0, y: 7) }
 
   let(:b2) { instance_double(Coordinate, x: 1, y: 1) }
@@ -24,6 +26,8 @@ describe Square do
   let(:d3) { instance_double(Coordinate, x: 3, y: 2) }
 
   let(:queen) { instance_double(Queen, color: :white) }
+
+  let(:white_player) { instance_double(Player, color: :white) }
 
   before do
     allow(a1).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
@@ -217,6 +221,13 @@ describe Square do
       it 'has a piece that cannot capture foward' do
         expect(square_a2).not_to be_piece_can_capture_forward
       end
+    end
+  end
+
+  describe '#move_piece' do
+    it 'calls move on piece with the given arguments' do
+      expect(square_a2.instance_variable_get(:@piece)).to receive(:move).with(a2, a3, white_player)
+      square_a2.move_piece(a2, a3, white_player)
     end
   end
 end

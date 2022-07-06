@@ -6,6 +6,7 @@ require_relative 'displayable'
 # a player of a chess game
 class Player
   include Displayable
+  attr_reader :color
   def initialize(color)
     @color = color
   end
