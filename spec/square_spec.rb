@@ -31,6 +31,13 @@ describe Square do
     allow(a1).to receive(:y_between?).with(0, 1).and_return(true)
     allow(a1).to receive(:x_and_y_both_even_or_odd?).and_return(true)
 
+    allow(a2).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
+    allow(a2).to receive(:in?).with([0, 7], [0, 7]).and_return(false)
+    allow(a2).to receive(:in?).with([3], [0, 7]).and_return(false)
+    allow(a2).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [1, 6]).and_return(true)
+    allow(a2).to receive(:y_between?).with(0, 1).and_return(true)
+    allow(a2).to receive(:x_and_y_both_even_or_odd?).and_return(false)
+
     allow(a8).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
     allow(a8).to receive(:in?).with([0, 7], [0, 7]).and_return(true)
     allow(a8).to receive(:y_between?).with(0, 1).and_return(false)
@@ -65,15 +72,6 @@ describe Square do
     end
 
     context "when the given coordinate's x and y are not both even or odd" do
-      before do
-        allow(a2).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
-        allow(a2).to receive(:in?).with([0, 7], [0, 7]).and_return(false)
-        allow(a2).to receive(:in?).with([3], [0, 7]).and_return(false)
-        allow(a2).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [1, 6]).and_return(true)
-        allow(a2).to receive(:y_between?).with(0, 1).and_return(true)
-        allow(a2).to receive(:x_and_y_both_even_or_odd?).and_return(false)
-      end
-
       it 'returns dark green' do
         expect(square_a2.square_color(a2)).to eq(:light_green)
       end
@@ -197,6 +195,28 @@ describe Square do
 
     it 'changes the color of the square back to its original color' do
       expect { square_a1.remove_highlight }.to change(square_a1, :color).to(:dark_green)
+    end
+  end
+
+  describe '#piece_can_capture_forward?' do
+    context 'when the piece can capture forward' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:can_capture_forward?).and_return(true)
+      end
+
+      it 'has a piece that can capture foward' do
+        expect(square_a1).to be_piece_can_capture_forward
+      end
+    end
+
+    context 'when the piece cannot capture forward' do
+      before do
+        allow(square_a2.instance_variable_get(:@piece)).to receive(:can_capture_forward?).and_return(false)
+      end
+
+      it 'has a piece that cannot capture foward' do
+        expect(square_a2).not_to be_piece_can_capture_forward
+      end
     end
   end
 end
