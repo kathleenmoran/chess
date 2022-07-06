@@ -225,9 +225,23 @@ describe Square do
   end
 
   describe '#move_piece' do
-    it 'calls move on piece with the given arguments' do
+    it 'calls #move on piece with the given arguments' do
       expect(square_a2.instance_variable_get(:@piece)).to receive(:move).with(a2, a3, white_player)
       square_a2.move_piece(a2, a3, white_player)
+    end
+  end
+
+  describe '#queenside_castle_piece_move' do
+    it 'calls #queenside_castle_move on piece with the coordinate' do
+      expect(square_a1.instance_variable_get(:@piece)).to receive(:queenside_castle_move).with(square_a1.instance_variable_get(:@coordinate))
+      square_a1.queenside_castle_piece_move
+    end
+  end
+
+  describe '#kingside_castle_piece_move' do
+    it 'calls #kingside_castle_move on piece with the coordinate' do
+      expect(square_a1.instance_variable_get(:@piece)).to receive(:kingside_castle_move).with(square_a1.instance_variable_get(:@coordinate))
+      square_a1.kingside_castle_piece_move
     end
   end
 end
