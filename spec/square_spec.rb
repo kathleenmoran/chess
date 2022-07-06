@@ -273,4 +273,11 @@ describe Square do
       square_a2.valid_piece_captures
     end
   end
+
+  describe '#piece_en_passant_coord' do
+    it 'calls #piece_en_passant_coord on the piece with the coordinate and the given start square' do
+      expect(square_a1.instance_variable_get(:@piece)).to receive(:en_passant_coord).with(square_a1.instance_variable_get(:@coordinate), square_a2)
+      square_a1.piece_en_passant_coord(square_a2)
+    end
+  end
 end
