@@ -3,10 +3,12 @@
 require_relative '../lib/square'
 require_relative '../lib/displayable'
 require_relative '../lib/coordinate'
+require_relative '../lib/no_piece'
 
 describe Square do
   let(:square_a1) { described_class.new(a1) }
   let(:square_a2) { described_class.new(a2) }
+  let(:square_a8) { described_class.new(a8) }
 
   let(:square_b2) { described_class.new(b2) }
 
@@ -14,6 +16,7 @@ describe Square do
 
   let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a2) { instance_double(Coordinate, x: 0, y: 1) }
+  let(:a8) { instance_double(Coordinate, x: 0, y: 7) }
 
   let(:b2) { instance_double(Coordinate, x: 1, y: 1) }
 
@@ -24,6 +27,12 @@ describe Square do
     allow(a1).to receive(:in?).with([0, 7], [0, 7]).and_return(true)
     allow(a1).to receive(:y_between?).with(0, 1).and_return(true)
     allow(a1).to receive(:x_and_y_both_even_or_odd?).and_return(true)
+
+    allow(a8).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
+    allow(a8).to receive(:in?).with([0, 7], [0, 7]).and_return(true)
+    allow(a8).to receive(:y_between?).with(0, 1).and_return(false)
+    allow(a8).to receive(:y_between?).with(6, 7).and_return(true)
+    allow(a8).to receive(:x_and_y_both_even_or_odd?).and_return(false)
 
     allow(b2).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
     allow(b2).to receive(:in?).with([0, 7], [0, 7]).and_return(false)
@@ -105,6 +114,56 @@ describe Square do
       it 'is not unmoved' do
         expect(square_d3).not_to be_unmoved
       end
+    end
+  end
+
+  describe '#occupied_by_white?' do
+    context 'when the piece is white' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:white?).and_return(true)
+      end
+
+      it 'is occupied by white' do
+        expect(square_a1).to be_occupied_by_white
+      end
+    end
+
+    context 'when the piece is not white' do
+      before do
+        allow(square_d3.instance_variable_get(:@piece)).to receive(:white?).and_return(false)
+      end
+  
+      it 'is not occupied by white' do
+        expect(square_d3).not_to be_occupied_by_white
+      end
+    end
+  end
+
+  describe '#occupied_by_black?' do
+    context 'when the piece is black' do
+      before do
+        allow(square_a8.instance_variable_get(:@piece)).to receive(:black?).and_return(true)
+      end
+
+      it 'is occupied by black' do
+        expect(square_a8).to be_occupied_by_black
+      end
+    end
+
+    context 'when the piece is not black' do
+      before do
+        allow(square_d3.instance_variable_get(:@piece)).to receive(:black?).and_return(false)
+      end
+  
+      it 'is not occupied by black' do
+        expect(square_d3).not_to be_occupied_by_black
+      end
+    end
+  end
+
+  describe '#remove_piece' do
+    it 'change the piece to a no piece' do
+      expect { square_a1.remove_piece }.to change(square_a1, :piece).to(NoPiece)
     end
   end
 end
