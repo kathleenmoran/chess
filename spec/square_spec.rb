@@ -325,4 +325,26 @@ describe Square do
       end
     end
   end
+
+  describe '#piece_can_en_passant?' do
+    context 'when the piece can en passant' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:can_en_passant?).and_return(true)
+      end
+
+      it 'is an en passant capture square' do
+        expect(square_a1).to be_piece_can_en_passant
+      end
+    end
+
+    context 'when the piece cannot en passant' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:can_en_passant?).and_return(false)
+      end
+
+      it 'is not an en passant capture square' do
+        expect(square_a1).not_to be_piece_can_en_passant
+      end
+    end
+  end
 end
