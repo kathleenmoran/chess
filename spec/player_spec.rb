@@ -171,4 +171,49 @@ describe Player do
       end
     end
   end
+
+  describe '#select_square' do
+    context 'when the player inputs a valid alpha-coordinate' do
+      it 'calls #select_square once' do
+        expect(white_player).to receive(:select_square).with(black_player).once
+        white_player.select_square(black_player)
+      end
+
+      it 'returns the coordinate in numerical form' do
+        expect(white_player.select_square(black_player) { 'a1' }).to eql(a1)
+      end
+    end
+
+    context "when the player inputs 'save'" do
+      it 'calls #select_square once' do
+        expect(white_player).to receive(:select_square).with(black_player).once
+        white_player.select_square(black_player)
+      end
+
+      it "returns 'save'" do
+        expect(white_player.select_square(black_player) { 'save' }).to eql('save')
+      end
+    end
+
+    context "when the player inputs 'quit'" do
+      it "returns 'quit'" do
+        expect(white_player.select_square(black_player) { 'quit' }).to eql('quit')
+      end
+    end
+
+    context "when the player inputs 'draw' and the opponent inputs 'draw'" do
+      before do
+        allow(white_player).to receive(:opponent_draw_response).with(black_player).and_return('draw')
+      end
+
+      it 'calls #select_square once' do
+        expect(white_player).to receive(:select_square).with(black_player).once
+        white_player.select_square(black_player) { 'draw' }
+      end
+
+      it "returns 'draw'" do
+        expect(white_player.select_square(black_player) { 'draw' }).to eql('draw')
+      end
+    end
+  end
 end
