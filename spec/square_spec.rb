@@ -188,4 +188,15 @@ describe Square do
       expect { square_a1.highlight(:neon_green) }.to change(square_a1, :color).to(:neon_green)
     end
   end
+
+  describe '#remove_highlight' do
+    before do
+      allow(square_a1).to receive(:square_color).with(square_a1.instance_variable_get(:@coordinate)).and_return(:dark_green)
+      square_a1.highlight(:neon_green)
+    end
+
+    it 'changes the color of the square back to its original color' do
+      expect { square_a1.remove_highlight }.to change(square_a1, :color).to(:dark_green)
+    end
+  end
 end
