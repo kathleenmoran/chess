@@ -4,6 +4,7 @@ require_relative '../lib/square'
 require_relative '../lib/displayable'
 require_relative '../lib/coordinate'
 require_relative '../lib/no_piece'
+require_relative '../lib/queen'
 
 describe Square do
   let(:square_a1) { described_class.new(a1) }
@@ -21,6 +22,8 @@ describe Square do
   let(:b2) { instance_double(Coordinate, x: 1, y: 1) }
 
   let(:d3) { instance_double(Coordinate, x: 3, y: 2) }
+
+  let(:queen) { instance_double(Queen, color: :white) }
 
   before do
     allow(a1).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
@@ -162,8 +165,14 @@ describe Square do
   end
 
   describe '#remove_piece' do
-    it 'change the piece to a no piece' do
+    it 'changes the piece to a no piece' do
       expect { square_a1.remove_piece }.to change(square_a1, :piece).to(NoPiece)
+    end
+  end
+
+  describe '#place_piece' do
+    it 'changes the piece to the given piece' do
+      expect { square_a1.place_piece(queen) }.to change(square_a1, :piece).to(queen)
     end
   end
 end
