@@ -244,4 +244,26 @@ describe Square do
       square_a1.kingside_castle_piece_move
     end
   end
+
+  describe '#piece_capturable?' do
+    context 'when the piece is capturable' do
+      before do
+        allow(square_a2.instance_variable_get(:@piece)).to receive(:capturable?).and_return(true)
+      end
+  
+      it 'has a capturable piece' do
+        expect(square_a2).to be_piece_capturable
+      end
+    end
+
+    context 'when the piece is not capturable' do
+      before do
+        allow(square_d3.instance_variable_get(:@piece)).to receive(:capturable?).and_return(false)
+      end
+
+      it 'does not have a capturable piece' do
+        expect(square_d3).not_to be_piece_capturable
+      end
+    end
+  end
 end
