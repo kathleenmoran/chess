@@ -10,35 +10,43 @@ describe Square do
 
   let(:square_b2) { described_class.new(b2) }
 
+  let(:square_d3) { described_class.new(d3) }
+
   let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a2) { instance_double(Coordinate, x: 0, y: 1) }
 
   let(:b2) { instance_double(Coordinate, x: 1, y: 1) }
 
+  let(:d3) { instance_double(Coordinate, x: 3, y: 2) }
+
+  before do
+    allow(a1).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
+    allow(a1).to receive(:in?).with([0, 7], [0, 7]).and_return(true)
+    allow(a1).to receive(:y_between?).with(0, 1).and_return(true)
+    allow(a1).to receive(:x_and_y_both_even_or_odd?).and_return(true)
+
+    allow(b2).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
+    allow(b2).to receive(:in?).with([0, 7], [0, 7]).and_return(false)
+    allow(b2).to receive(:in?).with([3], [0, 7]).and_return(false)
+    allow(b2).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [1, 6]).and_return(true)
+    allow(b2).to receive(:y_between?).with(0, 1).and_return(true)
+    allow(b2).to receive(:x_and_y_both_even_or_odd?).and_return(true)
+
+    allow(d3).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(true)
+    allow(d3).to receive(:y_between?).with(0, 1).and_return(false)
+    allow(d3).to receive(:y_between?).with(6, 7).and_return(false)
+    allow(d3).to receive(:x_and_y_both_even_or_odd?).and_return(false)
+    allow(square_d3.instance_variable_get(:@piece)).to receive(:occupant?).and_return(false)
+  end
+
   describe '#square_color' do
     context "when the given coordinate's x and y are both even" do
-      before do
-        allow(a1).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
-        allow(a1).to receive(:in?).with([0, 7], [0, 7]).and_return(true)
-        allow(a1).to receive(:y_between?).with(0, 1).and_return(true)
-        allow(a1).to receive(:x_and_y_both_even_or_odd?).and_return(true)
-      end
-
       it 'returns dark green' do
         expect(square_a1.square_color(a1)).to eq(:dark_green)
       end
     end
 
     context "when the given coordinate's x and y are both odd" do
-      before do
-        allow(b2).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [2, 3, 4, 5]).and_return(false)
-        allow(b2).to receive(:in?).with([0, 7], [0, 7]).and_return(false)
-        allow(b2).to receive(:in?).with([3], [0, 7]).and_return(false)
-        allow(b2).to receive(:in?).with([0, 1, 2, 3, 4, 5, 6, 7], [1, 6]).and_return(true)
-        allow(b2).to receive(:y_between?).with(0, 1).and_return(true)
-        allow(b2).to receive(:x_and_y_both_even_or_odd?).and_return(true)
-      end
-
       it 'returns dark green' do
         expect(square_b2.square_color(b2)).to eq(:dark_green)
       end
@@ -56,6 +64,46 @@ describe Square do
 
       it 'returns dark green' do
         expect(square_a2.square_color(a2)).to eq(:light_green)
+      end
+    end
+  end
+
+  describe '#occupied?' do
+    context 'when the piece is not an occupant' do
+      it 'is not occupied' do
+        expect(square_d3).not_to be_occupied
+      end
+    end
+
+    context 'when the piece is an occupant' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:occupant?).and_return(true)
+      end
+
+      it 'is occupied' do
+        expect(square_a1).to be_occupied
+      end
+    end
+  end
+
+  describe '#unmoved?' do
+    context 'when the piece has not been moved' do
+      before do
+        allow(square_b2.instance_variable_get(:@piece)).to receive(:unmoved?).and_return(true)
+      end
+
+      it 'is unmoved' do
+        expect(square_b2).to be_unmoved
+      end
+    end
+
+    context 'when the piece has been moved' do
+      before do
+        allow(square_d3.instance_variable_get(:@piece)).to receive(:unmoved?).and_return(false)
+      end
+  
+      it 'is not unmoved' do
+        expect(square_d3).not_to be_unmoved
       end
     end
   end
