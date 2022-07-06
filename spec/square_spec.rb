@@ -302,4 +302,27 @@ describe Square do
       end
     end
   end
+
+  describe '#piece_valid_en_passant_capture' do
+    context 'when the piece is capturable by en passant and is a valid en passant capture' do
+      before do
+        allow(square_a1).to receive(:en_passant_capture_square?).and_return(true)
+      end
+
+      it 'is an en passant capture square' do
+        expect(square_a1.instance_variable_get(:@piece)).to receive(:valid_en_passant_capture).with(square_a1.instance_variable_get(:@coordinate))
+        square_a1.piece_valid_en_passant_capture
+      end
+    end
+
+    context 'when the piece is not capturable by en passant' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:capturable_by_en_passant?).and_return(false)
+      end
+
+      it 'is not an en passant capture square' do
+        expect(square_a1.piece_valid_en_passant_capture).to be_nil
+      end
+    end
+  end
 end
