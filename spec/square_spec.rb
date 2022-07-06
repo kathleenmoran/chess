@@ -347,4 +347,26 @@ describe Square do
       end
     end
   end
+
+  describe '#occupied_by_king?' do
+    context 'when the piece is a king' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:king?).and_return(true)
+      end
+
+      it 'is an en passant capture square' do
+        expect(square_a1).to be_occupied_by_king
+      end
+    end
+
+    context 'when the piece cannot en passant' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:king?).and_return(false)
+      end
+
+      it 'is not an en passant capture square' do
+        expect(square_a1).not_to be_occupied_by_king
+      end
+    end
+  end
 end
