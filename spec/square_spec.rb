@@ -175,4 +175,17 @@ describe Square do
       expect { square_a1.place_piece(queen) }.to change(square_a1, :piece).to(queen)
     end
   end
+
+  describe '#valid_moves_of_piece' do
+    it 'calls valid moves on the piece' do
+      expect(square_a1.instance_variable_get(:@piece)).to receive(:valid_moves).with(square_a1.instance_variable_get(:@coordinate))
+      square_a1.valid_moves_of_piece
+    end
+  end
+
+  describe '#highlight' do
+    it 'changes the color to the given color' do
+      expect { square_a1.highlight(:neon_green) }.to change(square_a1, :color).to(:neon_green)
+    end
+  end
 end

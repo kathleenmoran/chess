@@ -13,7 +13,7 @@ require_relative 'no_piece'
 # a square on a chessboard
 class Square
   include Displayable
-  attr_reader :piece, :coordinate
+  attr_reader :piece, :coordinate, :color
   def initialize(coordinate, piece = Piece.for(coordinate))
     @coordinate = coordinate
     @piece = piece
