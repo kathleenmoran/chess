@@ -266,4 +266,11 @@ describe Square do
       end
     end
   end
+
+  describe '#valid_piece_captures' do
+    it 'calls #valid_captures on the piece with the coordinate' do
+      expect(square_a2.instance_variable_get(:@piece)).to receive(:valid_captures).with(square_a2.instance_variable_get(:@coordinate))
+      square_a2.valid_piece_captures
+    end
+  end
 end
