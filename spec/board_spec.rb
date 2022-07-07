@@ -385,9 +385,35 @@ describe Board do
       before do
         allow(white_player).to receive(:own_piece_at_square?).and_return(false)
       end
-  
+
       it 'is not a valid move' do
         expect(start_board).not_to be_valid_move(a2, a3, white_player, black_player)
+      end
+    end
+  end
+
+  describe '#check?' do
+    context "when none of the opponent's pieces can reach the player's king" do
+      before do
+        allow(start_board).to receive(:find_king_square).and_return(square_e1)
+        allow(black_player).to receive(:own_piece_at_square?).and_return(true)
+        allow(start_board).to receive(:reachable_squares).and_return([square_e1])
+      end
+
+      it 'is a check' do
+        expect(start_board).to be_check(white_player, black_player)
+      end
+    end
+
+    context "when at least one of the opponent's piece can reach the player's king" do
+      before do
+        allow(start_board).to receive(:find_king_square).and_return(square_e1)
+        allow(black_player).to receive(:own_piece_at_square?).and_return(true)
+        allow(start_board).to receive(:reachable_squares).and_return([])
+      end
+
+      it 'is not a check' do
+        expect(start_board).not_to be_check(white_player, black_player)
       end
     end
   end
