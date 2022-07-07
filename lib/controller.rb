@@ -70,5 +70,3 @@ class Controller
     end
   end
 end
-
-Controller.new.play_game
