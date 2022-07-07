@@ -352,4 +352,43 @@ describe Board do
       end
     end
   end
+
+  describe '#valid_move?' do
+    context 'when the player owns the piece at the start coordinate and the end coordinate '\
+    "square is in the piece's legal moves" do
+      before do
+        allow(white_player).to receive(:own_piece_at_square?).and_return(true)
+        allow(start_board).to receive(:find_square).and_return(square_a2, square_a3)
+        allow(start_board).to receive(:legal_moves).and_return([square_a3, square_a4])
+      end
+
+      it 'is a valid move' do
+        expect(start_board).to be_valid_move(a2, a3, white_player, black_player)
+      end
+    end
+
+    context 'when the player owns the piece at the start coordinate but the end coordinate '\
+    "square is not in the piece's legal moves" do
+      before do
+        allow(white_player).to receive(:own_piece_at_square?).and_return(true)
+        allow(start_board).to receive(:find_square).and_return(square_a2, square_a4)
+        allow(start_board).to receive(:legal_moves).and_return([square_a3])
+      end
+
+      it 'is not a valid move' do
+        expect(start_board).not_to be_valid_move(a2, a4, white_player, black_player)
+      end
+    end
+
+    context 'when the player does not own the piece at the start coordinate and the end coordinate '\
+    "square is in the piece's legal moves" do
+      before do
+        allow(white_player).to receive(:own_piece_at_square?).and_return(false)
+      end
+  
+      it 'is not a valid move' do
+        expect(start_board).not_to be_valid_move(a2, a3, white_player, black_player)
+      end
+    end
+  end
 end
