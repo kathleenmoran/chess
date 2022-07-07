@@ -12,22 +12,6 @@ class Board
     @en_passant_square = en_passant_square
   end
 
-  def deep_dup
-    Board.new(deep_dup_squares, deep_dup_en_passant)
-  end
-
-  def deep_dup_squares
-    @squares.map do |row|
-      row.map(&:deep_dup)
-    end
-  end
-
-  def deep_dup_en_passant
-    return if @en_passant_square.nil?
-
-    @en_passant_square.deep_dup
-  end
-
   def to_s
     string_board = @squares
                    .each_with_index
@@ -295,5 +279,21 @@ class Board
     new_board = deep_dup
     new_board.update_with_move(start_square.coordinate, end_square.coordinate, player)
     new_board.check?(player, opponent)
+  end
+
+  def deep_dup
+    Board.new(deep_dup_squares, deep_dup_en_passant)
+  end
+
+  def deep_dup_squares
+    @squares.map do |row|
+      row.map(&:deep_dup)
+    end
+  end
+
+  def deep_dup_en_passant
+    return if @en_passant_square.nil?
+
+    @en_passant_square.deep_dup
   end
 end

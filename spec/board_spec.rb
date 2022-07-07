@@ -3,6 +3,7 @@
 require_relative '../lib/board'
 require_relative '../lib/coordinate'
 require_relative '../lib/square'
+require_relative '../lib/player'
 
 describe Board do
   subject(:start_board) { described_class.new }
@@ -164,43 +165,29 @@ describe Board do
     ]
   end
 
-  describe '#find_square' do
-    context 'when a square corresponding to the given coordinate is on the board' do
-      it 'returns the square with the given coordinate' do
-        expect(start_board.find_square(b6)).to eql(square_b6)
-      end
-    end
-  end
+  let(:black_player) { instance_double(Player, color: :black) }
+  let(:white_player) { instance_double(Player, color: :white) }
 
-  describe '#make_board' do
-    it 'returns an 8 by 8 board' do
-      expect(start_board.make_board).to eql(board_values)
-    end
-  end
-
-  describe '#x_and_y_both_even_or_odd?' do
-    context 'when x and y are both even' do
-      it 'is both even or odd' do
-        expect(c5).to be_x_and_y_both_even_or_odd
-      end
+  describe '#select_piece' do
+    before do
+      allow(start_board).to receive(:find_square).and_return(square_a2)
+      allow(start_board).to receive(:legal_moves).and_return([square_a3, square_a4])
+      allow(start_board).to receive(:highlight_piece_and_moves)
     end
 
-    context 'when x and y are both odd' do
-      it 'is both even or odd' do
-        expect(d8).to be_x_and_y_both_even_or_odd
-      end
+    it 'calls #highlight_piece_and_moves' do
+      expect(start_board).to receive(:highlight_piece_and_moves)
+      start_board.select_piece(a2, white_player, black_player)
     end
 
-    context 'when x is even and y is odd' do
-      it 'is not both even or odd' do
-        expect(c4).not_to be_x_and_y_both_even_or_odd
-      end
+    it 'calls #find_square' do
+      expect(start_board).to receive(:find_square).with(a2)
+      start_board.select_piece(a2, white_player, black_player)
     end
 
-    context 'when x is odd and y is even' do
-      it 'is not both even or odd' do
-        expect(h3).to be_x_and_y_both_even_or_odd
-      end
+    it 'calls legal moves' do
+      expect(start_board).to receive(:legal_moves).with(a2, white_player, black_player)
+      start_board.select_piece(a2, white_player, black_player)
     end
   end
 end
