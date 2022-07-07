@@ -281,4 +281,38 @@ describe Board do
       end
     end
   end
+
+  describe '#valid_start_square?' do
+    context 'when the player owns the piece at the square and there is at least one legal move' do
+      before do
+        allow(white_player).to receive(:own_piece_at_square?).and_return(true)
+        allow(start_board).to receive(:legal_moves).and_return([square_a3, square_a4])
+      end
+
+      it 'is a valid start square' do
+        expect(start_board).to be_valid_start_square(a2, white_player, black_player)
+      end
+    end
+
+    context 'when the player owns the piece at the square but there are no legal moves' do
+      before do
+        allow(white_player).to receive(:own_piece_at_square?).and_return(true)
+        allow(start_board).to receive(:legal_moves).and_return([])
+      end
+
+      it 'is not a valid start square' do
+        expect(start_board).not_to be_valid_start_square(a2, white_player, black_player)
+      end
+    end
+
+    context 'when the player does not own the piece at the square and there is at least one legal move' do
+      before do
+        allow(white_player).to receive(:own_piece_at_square?).and_return(false)
+      end
+
+      it 'is not a valid start square' do
+        expect(start_board).not_to be_valid_start_square(a2, white_player, black_player)
+      end
+    end
+  end
 end
