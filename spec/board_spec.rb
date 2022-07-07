@@ -247,4 +247,38 @@ describe Board do
       end
     end
   end
+
+  describe '#stalemate?' do
+    context 'when the player is not in check and there are no available moves' do
+      before do
+        allow(start_board).to receive(:check?).and_return(false)
+        allow(start_board).to receive(:no_way_out_of_check?).and_return(true)
+      end
+
+      it 'is a checkmate' do
+        expect(start_board).to be_stalemate(white_player, black_player)
+      end
+    end
+
+    context 'when the player is not in check and there are no available moves' do
+      before do
+        allow(start_board).to receive(:check?).and_return(false)
+        allow(start_board).to receive(:no_way_out_of_check?).and_return(false)
+      end
+
+      it 'is not a checkmate' do
+        expect(start_board).not_to be_stalemate(white_player, black_player)
+      end
+    end
+
+    context 'when the player is in check and there are no available moves' do
+      before do
+        allow(start_board).to receive(:check?).and_return(true)
+      end
+
+      it 'is not a checkmate' do
+        expect(start_board).not_to be_stalemate(white_player, black_player)
+      end
+    end
+  end
 end
