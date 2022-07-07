@@ -6,6 +6,7 @@ require_relative '../lib/coordinate'
 require_relative '../lib/no_piece'
 require_relative '../lib/queen'
 require_relative '../lib/player'
+require_relative '../lib/piece'
 
 describe Square do
   let(:square_a1) { described_class.new(a1) }
@@ -366,6 +367,136 @@ describe Square do
 
       it 'is not an en passant capture square' do
         expect(square_a1).not_to be_occupied_by_king
+      end
+    end
+  end
+
+  describe '#piece_y_move_sign' do
+    it 'calls #y_move_sign on piece with the coordinate' do
+      expect(square_a1.instance_variable_get(:@piece)).to receive(:y_move_sign)
+      square_a1.piece_y_move_sign
+    end
+  end
+
+  describe '#piece_promotable?' do
+    context 'when the piece is promotable, the coordinate is in the first row, and the square is occupied by black' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:promotable?).and_return(true)
+        allow(square_a1.instance_variable_get(:@coordinate)).to receive(:in_first_row?).and_return(true)
+        allow(square_a1).to receive(:occupied_by_black?).and_return(true)
+      end
+
+      it 'has a promotable piece' do
+        expect(square_a1).to be_piece_promotable
+      end
+    end
+
+    context 'when the piece is promotable, the coordinate is in the last row, and the square is occupied by white' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:promotable?).and_return(true)
+        allow(square_a1.instance_variable_get(:@coordinate)).to receive(:in_first_row?).and_return(false)
+        allow(square_a1).to receive(:occupied_by_black?).and_return(false)
+        allow(square_a1.instance_variable_get(:@coordinate)).to receive(:in_last_row?).and_return(true)
+        allow(square_a1).to receive(:occupied_by_white?).and_return(true)
+      end
+
+      it 'has a promotable piece' do
+        expect(square_a1).to be_piece_promotable
+      end
+    end
+
+    context 'when the piece is promotable, the coordinate is in the last row, and the square is occupied by black' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:promotable?).and_return(true)
+        allow(square_a1.instance_variable_get(:@coordinate)).to receive(:in_first_row?).and_return(false)
+        allow(square_a1).to receive(:occupied_by_black?).and_return(true)
+        allow(square_a1.instance_variable_get(:@coordinate)).to receive(:in_last_row?).and_return(true)
+        allow(square_a1).to receive(:occupied_by_white?).and_return(false)
+      end
+
+      it 'does not have a promotable piece' do
+        expect(square_a1).not_to be_piece_promotable
+      end
+    end
+
+    context 'when the piece is promotable, the coordinate is in the first row, and the square is occupied by white' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:promotable?).and_return(true)
+        allow(square_a1.instance_variable_get(:@coordinate)).to receive(:in_first_row?).and_return(true)
+        allow(square_a1).to receive(:occupied_by_black?).and_return(false)
+        allow(square_a1.instance_variable_get(:@coordinate)).to receive(:in_last_row?).and_return(false)
+        allow(square_a1).to receive(:occupied_by_white?).and_return(true)
+      end
+
+      it 'does not have a promotable piece' do
+        expect(square_a1).not_to be_piece_promotable
+      end
+    end
+
+    context 'when the piece is not promotable' do
+      before do
+        allow(square_a1.instance_variable_get(:@piece)).to receive(:promotable?).and_return(false)
+      end
+
+      it 'does not have a promotable piece' do
+        expect(square_a1).not_to be_piece_promotable
+      end
+    end
+  end
+
+  describe '#promote_piece' do
+    context 'when the user enters a valid piece promotion' do
+      before do
+        allow(square_a1).to receive(:prompt_promotion_selection).and_return('queen')
+        allow(Piece).to receive(:promotion).and_return(queen)
+      end
+
+      it 'updates the piece' do
+        expect { square_a1.promote_piece }.to change(square_a1, :piece)
+      end
+    end
+
+    context 'when the user enters an invalid piece promotion followed by a valid piece promotion' do
+      before do
+        allow(square_a1).to receive(:print_invalid_promotion_message)
+        allow(square_a1).to receive(:prompt_promotion_selection).and_return('b', 'queen')
+        allow(Piece).to receive(:promotion).and_return(nil, queen)
+      end
+
+      it 'calls promote piece once' do
+        expect(square_a1).to receive(:promote_piece).once
+        square_a1.promote_piece
+      end
+
+      it 'prints an invalid message once' do
+        expect(square_a1).to receive(:print_invalid_promotion_message).once
+        square_a1.promote_piece
+      end
+
+      it 'updates the piece' do
+        expect { square_a1.promote_piece }.to change(square_a1, :piece)
+      end
+    end
+
+    context 'when the user enters two invalid piece promotions followed by a valid piece promotion' do
+      before do
+        allow(square_a1).to receive(:print_invalid_promotion_message)
+        allow(square_a1).to receive(:prompt_promotion_selection).and_return('b', 'pawn', 'queen')
+        allow(Piece).to receive(:promotion).and_return(nil, nil, queen)
+      end
+
+      it 'calls promote piece once' do
+        expect(square_a1).to receive(:promote_piece).once
+        square_a1.promote_piece
+      end
+
+      it 'prints an invalid message once' do
+        expect(square_a1).to receive(:print_invalid_promotion_message).twice
+        square_a1.promote_piece
+      end
+
+      it 'updates the piece' do
+        expect { square_a1.promote_piece }.to change(square_a1, :piece)
       end
     end
   end
