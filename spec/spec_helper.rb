@@ -95,4 +95,5 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
+  RSpec::Mocks.configuration.allow_message_expectations_on_nil = true
 end

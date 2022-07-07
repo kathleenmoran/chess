@@ -7,6 +7,8 @@ require_relative 'displayable'
 # a chessboard
 class Board
   include Displayable
+  attr_reader :en_passant_square
+
   def initialize(squares = make_board, en_passant_square = nil)
     @squares = squares
     @en_passant_square = en_passant_square

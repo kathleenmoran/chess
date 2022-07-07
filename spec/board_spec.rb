@@ -7,6 +7,7 @@ require_relative '../lib/player'
 
 describe Board do
   subject(:start_board) { described_class.new }
+  subject(:start_board_with_en_passant) { described_class.new(board_values, square_a2) }
 
   let(:a1) { instance_double(Coordinate, x: 0, y: 0) }
   let(:a2) { instance_double(Coordinate, x: 0, y: 1) }
@@ -414,6 +415,85 @@ describe Board do
 
       it 'is not a check' do
         expect(start_board).not_to be_check(white_player, black_player)
+      end
+    end
+  end
+
+  describe '#update_with_move' do
+    context 'when the player makes a move that does not result in a promotion or an en passant capture' do
+      before do
+        allow(start_board).to receive(:find_square).and_return(square_a2, square_a3, square_a2)
+        allow(square_a3).to receive(:piece_en_passant_coord)
+        allow(start_board).to receive(:update_en_passant_square)
+        allow(start_board).to receive(:make_move)
+        allow(square_a3).to receive(:piece_promotable?).and_return(false)
+      end
+
+      it 'calls make move with the player, start square, and end square' do
+        expect(start_board).to receive(:make_move).with(square_a2, square_a3, white_player)
+        start_board.update_with_move(a2, a3, white_player)
+      end
+
+      it 'does not remove the piece at the en passant square' do
+        expect(start_board.instance_variable_get(:@en_passant_square)).not_to receive(:remove_piece)
+        start_board.update_with_move(a2, a3, white_player)
+      end
+
+      it 'does not promote the piece at the end square' do
+        expect(square_a3).not_to receive(:promote_piece)
+        start_board.update_with_move(a2, a3, white_player)
+      end
+    end
+
+    context 'when the player makes a move that results in a promotion' do
+      before do
+        allow(start_board).to receive(:find_square).and_return(square_a2, square_a3, square_a2)
+        allow(square_a3).to receive(:piece_en_passant_coord)
+        allow(start_board).to receive(:update_en_passant_square)
+        allow(start_board).to receive(:make_move)
+        allow(square_a3).to receive(:piece_promotable?).and_return(true)
+        allow(square_a3).to receive(:promote_piece)
+      end
+
+      it 'calls make move with the player, start square, and end square' do
+        expect(start_board).to receive(:make_move).with(square_a2, square_a3, white_player)
+        start_board.update_with_move(a2, a3, white_player)
+      end
+
+      it 'does not remove the piece at the en passant square' do
+        expect(start_board.instance_variable_get(:@en_passant_square)).not_to receive(:remove_piece)
+        start_board.update_with_move(a2, a3, white_player)
+      end
+
+      it 'does not promote the piece at the end square' do
+        expect(square_a3).to receive(:promote_piece)
+        start_board.update_with_move(a2, a3, white_player)
+      end
+    end
+
+    context 'when the player makes a move that results in an en passant capture' do
+      before do
+        allow(start_board_with_en_passant).to receive(:find_square).and_return(square_a2, square_a3, square_a2)
+        allow(square_a3).to receive(:piece_en_passant_coord)
+        allow(start_board_with_en_passant).to receive(:update_en_passant_square)
+        allow(start_board_with_en_passant).to receive(:make_move)
+        allow(square_a3).to receive(:piece_promotable?).and_return(false)
+        allow(square_a2).to receive(:remove_piece)
+      end
+
+      it 'calls make move with the player, start square, and end square' do
+        expect(start_board_with_en_passant).to receive(:make_move).with(square_a2, square_a3, white_player)
+        start_board_with_en_passant.update_with_move(a2, a3, white_player)
+      end
+
+      it 'does not remove the piece at the en passant square' do
+        expect(start_board_with_en_passant.instance_variable_get(:@en_passant_square)).to receive(:remove_piece)
+        start_board_with_en_passant.update_with_move(a2, a3, white_player)
+      end
+
+      it 'does not promote the piece at the end square' do
+        expect(square_a3).not_to receive(:promote_piece)
+        start_board_with_en_passant.update_with_move(a2, a3, white_player)
       end
     end
   end
