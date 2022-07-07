@@ -190,4 +190,27 @@ describe Board do
       start_board.select_piece(a2, white_player, black_player)
     end
   end
+
+  describe '#deselect_piece' do
+    before do
+      allow(start_board).to receive(:find_square).and_return(square_a2)
+      allow(start_board).to receive(:legal_moves).and_return([square_a3, square_a4])
+      allow(start_board).to receive(:remove_square_highlights)
+    end
+
+    it 'calls #remove_square_highlights' do
+      expect(start_board).to receive(:remove_square_highlights)
+      start_board.deselect_piece(a2, white_player, black_player)
+    end
+
+    it 'calls #find_square' do
+      expect(start_board).to receive(:find_square).with(a2)
+      start_board.deselect_piece(a2, white_player, black_player)
+    end
+
+    it 'calls legal moves' do
+      expect(start_board).to receive(:legal_moves).with(a2, white_player, black_player)
+      start_board.deselect_piece(a2, white_player, black_player)
+    end
+  end
 end
