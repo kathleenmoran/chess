@@ -500,4 +500,19 @@ describe Square do
       end
     end
   end
+
+  describe '#deep_dup' do
+    it 'calls #deep_dup on the piece' do
+      expect(square_a1.instance_variable_get(:@piece)).to receive(:deep_dup)
+      square_a1.deep_dup
+    end
+
+    it 'returns an object that is not equal to the original' do
+      expect(square_a1.deep_dup).not_to be(square_a1)
+    end
+
+    it 'returns a square' do
+      expect(square_a1.deep_dup).to be_kind_of(described_class)
+    end
+  end
 end
