@@ -315,4 +315,41 @@ describe Board do
       end
     end
   end
+
+  describe '#color_king' do
+    context 'when there is a checkmate' do
+      before do
+        allow(start_board).to receive(:checkmate?).and_return(true)
+      end
+
+      it 'will color the king square red' do
+        expect(start_board).to receive(:highlight_king).with(white_player, :red)
+        start_board.color_king(white_player, black_player)
+      end
+    end
+
+    context 'when there is a check' do
+      before do
+        allow(start_board).to receive(:checkmate?).and_return(false)
+        allow(start_board).to receive(:check?).and_return(true)
+      end
+
+      it 'will color the king square orange' do
+        expect(start_board).to receive(:highlight_king).with(white_player, :orange)
+        start_board.color_king(white_player, black_player)
+      end
+    end
+
+    context 'when there is neither a checkmate nor a stalemate' do
+      before do
+        allow(start_board).to receive(:checkmate?).and_return(false)
+        allow(start_board).to receive(:check?).and_return(false)
+      end
+
+      it 'will remove highlighting from the king square' do
+        expect(start_board).to receive(:unhighlight_king).with(white_player)
+        start_board.color_king(white_player, black_player)
+      end
+    end
+  end
 end
