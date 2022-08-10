@@ -5,7 +5,7 @@ A fully functional chess game that can be played with two players in the termina
 Play online on [Replit](https://replit.com/@kathleenmoran10/chess#.replit).
 
 ## Demo
-[Demo](chess_demo.gif)
+![Demo](chess_demo.gif)
 
 This demo shows a game that culminates in the [fool's mate](https://en.wikipedia.org/wiki/Fool%27s_mate#:~:text=In%20chess%2C%20the%20fool's%20mate,second%20move%20with%20the%20queen.), which is the checkmate delivered after the fewest possible moves from the game's starting position.
 
