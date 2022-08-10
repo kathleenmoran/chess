@@ -20,6 +20,7 @@ class Chess
   end
 
   def play_game
+    system 'clear'
     puts @board
     until @board.checkmate?(@active_player, inactive_player) || @board.stalemate?(@active_player, inactive_player)
       play_turn
@@ -28,6 +29,7 @@ class Chess
       change_active_player
       print_check_message(@active_player) if @board.check?(@active_player, inactive_player)
     end
+    system 'clear'
     puts @board
     print_end_game_message
   end
@@ -43,6 +45,7 @@ class Chess
 
     @board.update_with_move(start_coord, end_coord, @active_player)
     manage_check_warnings
+    system 'clear'
     puts @board
   end
 
@@ -76,6 +79,7 @@ class Chess
       @quit = true
     elsif @board.valid_start_square?(start_coord, @active_player, inactive_player)
       @board.select_piece(start_coord, @active_player, inactive_player)
+      system 'clear'
       puts @board
       @board.deselect_piece(start_coord, @active_player, inactive_player)
       start_coord

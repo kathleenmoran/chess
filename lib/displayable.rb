@@ -22,14 +22,14 @@ module Displayable
   end
 
   def prompt_piece_selection(player)
-    puts "#{player}, enter the coordinate of the piece you would like to move (e.g., A1) or "\
-     "enter 'draw', 'save', or 'quit':"
+    puts "#{player}, enter the coordinate \nof the piece you would like \nto move (e.g., A1) or "\
+     "enter \n'draw', 'save', or 'quit':"
     gets.chomp
   end
 
   def prompt_move_selection(player)
-    puts "#{player}, enter the coordinate of the square you would like the selected piece to move to (e.g., A1) or "\
-    "enter 'draw', 'save', or 'quit':"
+    puts "#{player}, enter the coordinate \nof the square you would like \nthe selected piece to move to \n(e.g., A1) or "\
+    "enter 'draw', \n'save', or 'quit':"
     gets.chomp
   end
 
@@ -90,8 +90,8 @@ module Displayable
   end
 
   def print_welcome_to_chess_message
-    puts "\nWelcome to chess! This is a two-player, console-based game that follows "\
-    "traditional chess rules without time limitations.\n"
+    puts "\nWelcome to chess! This is a \ntwo-player, console-based game \nthat follows "\
+    "traditional chess \nrules without time limitations.\n"
   end
 
   def prompt_select_game_type
